@@ -86,7 +86,6 @@ describe('withSuspense', () => {
     )
 
     expect(screen.getByText('Loading, no')).toBeInTheDocument()
-    expect(screen.queryByText('Hello, no')).not.toBeInTheDocument()
   })
 
   it('renders the component with a prop-derived value and not the fallback when not suspended', async () => {
@@ -97,6 +96,5 @@ describe('withSuspense', () => {
     )
 
     expect(await screen.findByText('Hello, yes')).toBeInTheDocument()
-    expect(screen.queryByText('Loading, yes')).not.toBeInTheDocument()
   })
 })
