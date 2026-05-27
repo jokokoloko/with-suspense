@@ -13,7 +13,7 @@ type Props = {
 const neverResolves = new Promise<void>(() => {})
 
 function Greeting({ name }: Props): ReactElement {
-  if (name === 'slow') throw neverResolves
+  if (name === 'no') throw neverResolves
 
   return <p>Hello, {name}</p>
 }
@@ -81,24 +81,24 @@ describe('withSuspense', () => {
   })
 
   it('renders the fallback with a prop-derived value while the component is suspended', () => {
-    const name = 'slow'
+    const name = 'no'
 
     render(
       <WrappedGreeting name={name} fallback={<LoadingMessage text={name} />} />,
     )
 
-    expect(screen.getByText('slow')).toBeInTheDocument()
-    expect(screen.queryByText('fast')).not.toBeInTheDocument()
+    expect(screen.getByText('no')).toBeInTheDocument()
+    expect(screen.queryByText('yes')).not.toBeInTheDocument()
   })
 
   it('renders the component with a prop-derived value and not the fallback when not suspended', async () => {
-    const name = 'fast'
+    const name = 'yes'
 
     render(
       <WrappedGreeting name={name} fallback={<LoadingMessage text={name} />} />,
     )
 
-    expect(await screen.findByText('Hello, fast')).toBeInTheDocument()
-    expect(screen.queryByText('slow')).not.toBeInTheDocument()
+    expect(await screen.findByText('Hello, yes')).toBeInTheDocument()
+    expect(screen.queryByText('no')).not.toBeInTheDocument()
   })
 })
