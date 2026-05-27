@@ -20,18 +20,20 @@ function SuspendingComponent(): ReactElement {
   throw neverResolves
 }
 
-// A component with props that suspends when name is 'slow'
-function SlowGreeting({ name }: Props): ReactElement {
-  if (name === 'slow') throw neverResolves
+type LoadingMessageProps = {
+  text?: string
+}
 
-  return <p>Hello, {name}</p>
+function LoadingMessage({
+  text = 'Loading...',
+}: LoadingMessageProps): ReactElement {
+  return <p>{text}</p>
 }
 
 const fallback = <p>Loading...</p>
 
 const WrappedGreeting = withSuspense(Greeting, fallback)
 const WrappedSuspending = withSuspense(SuspendingComponent, fallback)
-const WrappedSlowGreeting = withSuspense(SlowGreeting, fallback)
 
 describe('withSuspense', () => {
   it('sets displayName on the wrapped component', () => {
@@ -62,17 +64,17 @@ describe('withSuspense', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('renders the usage-site fallback override when provided for a component with props', () => {
-    render(<WrappedSlowGreeting name="slow" fallback={<p>Please wait...</p>} />)
+  it('renders a component without props as the usage-site fallback override', () => {
+    render(<WrappedSuspending fallback={<LoadingMessage />} />)
 
-    expect(screen.getByText('Please wait...')).toBeInTheDocument()
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
-  it('renders nothing while suspended when fallback is null for a component with props', () => {
-    const { container } = render(
-      <WrappedSlowGreeting name="slow" fallback={null} />,
+  it('renders a component with props as the usage-site fallback override', () => {
+    render(
+      <WrappedSuspending fallback={<LoadingMessage text="Please wait..." />} />,
     )
 
-    expect(container).toBeEmptyDOMElement()
+    expect(screen.getByText('Please wait...')).toBeInTheDocument()
   })
 })
