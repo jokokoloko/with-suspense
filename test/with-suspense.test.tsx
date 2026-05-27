@@ -37,13 +37,13 @@ const WrappedSuspending = withSuspense(SuspendingComponent, fallback)
 
 describe('withSuspense', () => {
   it('sets displayName on the wrapped component', () => {
-    expect(WrappedGreeting.displayName).toBe('WithSuspense(Greeting)')
+    expect(WrappedGreeting.displayName).toBe('withSuspense(Greeting)')
   })
 
   it('accepts devToolsName without affecting rendering', async () => {
     const name = 'squid'
 
-    render(<WrappedGreeting name={name} devToolsName="WithSuspense(Custom)" />)
+    render(<WrappedGreeting name={name} devToolsName="withSuspense(Custom)" />)
 
     expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
