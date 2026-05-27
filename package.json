@@ -19,6 +19,7 @@
   },
   "license": "MIT",
   "author": "jokokoloko",
+  "packageManager": "pnpm@10.33.0",
   "type": "module",
   "exports": {
     ".": {
