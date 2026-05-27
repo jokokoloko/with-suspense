@@ -26,10 +26,8 @@ type LoadingMessageProps = {
   text?: string
 }
 
-function LoadingMessage({
-  text = 'Loading...',
-}: LoadingMessageProps): ReactElement {
-  return <p>{text}</p>
+function LoadingMessage({ text = '...' }: LoadingMessageProps): ReactElement {
+  return <p>Loading, {text}</p>
 }
 
 const fallback = <p>Loading...</p>
@@ -69,7 +67,7 @@ describe('withSuspense', () => {
   it('renders a component without props as the usage-site fallback override', () => {
     render(<WrappedSuspending fallback={<LoadingMessage />} />)
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
+    expect(screen.getByText('Loading, ...')).toBeInTheDocument()
   })
 
   it('renders a component with props as the usage-site fallback override', () => {
@@ -77,7 +75,7 @@ describe('withSuspense', () => {
       <WrappedSuspending fallback={<LoadingMessage text="Please wait..." />} />,
     )
 
-    expect(screen.getByText('Please wait...')).toBeInTheDocument()
+    expect(screen.getByText('Loading, Please wait...')).toBeInTheDocument()
   })
 
   it('renders the fallback with a prop-derived value while the component is suspended', () => {
@@ -87,8 +85,8 @@ describe('withSuspense', () => {
       <WrappedGreeting name={name} fallback={<LoadingMessage text={name} />} />,
     )
 
-    expect(screen.getByText('no')).toBeInTheDocument()
-    expect(screen.queryByText('yes')).not.toBeInTheDocument()
+    expect(screen.getByText('Loading, no')).toBeInTheDocument()
+    expect(screen.queryByText('Hello, no')).not.toBeInTheDocument()
   })
 
   it('renders the component with a prop-derived value and not the fallback when not suspended', async () => {
@@ -99,6 +97,6 @@ describe('withSuspense', () => {
     )
 
     expect(await screen.findByText('Hello, yes')).toBeInTheDocument()
-    expect(screen.queryByText('no')).not.toBeInTheDocument()
+    expect(screen.queryByText('Loading, yes')).not.toBeInTheDocument()
   })
 })
