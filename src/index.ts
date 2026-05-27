@@ -1,3 +1,4 @@
-export { default as withSuspense } from './with-suspense'
-
-export type { WithSuspenseProps } from './with-suspense'
+export {
+  default as withSuspense,
+  type WithSuspenseProps,
+} from './with-suspense'
