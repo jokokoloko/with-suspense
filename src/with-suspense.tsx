@@ -5,19 +5,22 @@ import {
   type ReactNode,
 } from 'react'
 
+type WithSuspenseProps<T> = T & {
+  fallback?: ReactNode
+  devToolsName?: string
+}
+
 function withSuspense<T extends object>(
   Component: ComponentType<T>,
   fallback: ReactNode = 'Loading...',
-): (
-  props: T & { fallback?: ReactNode; devToolsName?: string },
-) => ReactElement {
+): (props: WithSuspenseProps<T>) => ReactElement {
   const displayName = `WithSuspense(${Component.displayName ?? Component.name})`
 
   function WithSuspense({
     fallback: fallbackOverride,
     devToolsName,
     ...props
-  }: T & { fallback?: ReactNode; devToolsName?: string }): ReactElement {
+  }: WithSuspenseProps<T>): ReactElement {
     const resolvedFallback =
       fallbackOverride === undefined ? fallback : fallbackOverride
 
@@ -36,3 +39,5 @@ function withSuspense<T extends object>(
 }
 
 export default withSuspense
+
+export type { WithSuspenseProps }
