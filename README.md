@@ -11,9 +11,15 @@ npm install @jokokoloko/with-suspense
 ## Usage
 
 ```tsx
+import type { ReactElement } from 'react'
+
 import { withSuspense } from '@jokokoloko/with-suspense'
 
-async function UserCard({ id }: { id: string }) {
+type Props = {
+  id: string
+}
+
+async function UserCard({ id }: Props): Promise<ReactElement> {
   const user = await getUser(id)
 
   return <div>{user.name}</div>
