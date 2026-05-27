@@ -1,4 +1,4 @@
-import React from 'react'
+import type { ReactElement } from 'react'
 
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
@@ -9,19 +9,21 @@ type Props = {
   name: string
 }
 
-function Greeting({ name }: Props): React.ReactElement {
+function Greeting({ name }: Props): ReactElement {
   return <p>Hello, {name}</p>
 }
 
 // A component that always suspends — used to test fallback rendering
 const neverResolves = new Promise<void>(() => {})
 
-function SuspendingComponent(): React.ReactElement {
+function SuspendingComponent(): ReactElement {
   throw neverResolves
 }
 
-const WrappedGreeting = withSuspense(Greeting, <p>Loading...</p>)
-const WrappedSuspending = withSuspense(SuspendingComponent, <p>Loading...</p>)
+const fallback = <p>Loading...</p>
+
+const WrappedGreeting = withSuspense(Greeting, fallback)
+const WrappedSuspending = withSuspense(SuspendingComponent, fallback)
 
 describe('withSuspense', () => {
   it('sets displayName on the wrapped component', () => {
