@@ -1,0 +1,85 @@
+{
+  "name": "@jokokoloko/with-suspense",
+  "version": "0.1.0",
+  "description": "A higher-order component that wraps a React component in a Suspense boundary",
+  "keywords": [
+    "react",
+    "suspense",
+    "hoc",
+    "higher-order-component",
+    "typescript"
+  ],
+  "homepage": "https://github.com/jokokoloko/with-suspense#readme",
+  "bugs": {
+    "url": "https://github.com/jokokoloko/with-suspense/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jokokoloko/with-suspense.git"
+  },
+  "license": "MIT",
+  "author": "jokokoloko",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint",
+    "lint:md": "markdownlint-cli2 '**/*.md' '#node_modules/**'",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm format:check && pnpm lint && pnpm lint:md && tsc --noEmit",
+    "prepare": "husky"
+  },
+  "peerDependencies": {
+    "react": ">=16.6.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.15",
+    "@vitejs/plugin-react": "^6.0.2",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
+    "lint-staged": "^17.0.5",
+    "markdownlint-cli2": "^0.22.1",
+    "prettier": "^3.8.3",
+    "react": "^19.2.6",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.0",
+    "vitest": "^4.1.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "*.{js,jsx,ts,tsx,mjs}": "eslint --fix",
+    "*.md": "markdownlint-cli2 --fix"
+  }
+}
