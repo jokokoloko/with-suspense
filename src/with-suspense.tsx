@@ -9,6 +9,8 @@ function withSuspense<T extends object>(
   Component: ComponentType<T>,
   fallback: ReactNode = 'Loading...',
 ): (props: T & { fallback?: ReactNode }) => ReactElement {
+  const displayName = `WithSuspense(${Component.displayName ?? Component.name})`
+
   function WithSuspense({
     fallback: fallbackOverride,
     ...props
@@ -17,13 +19,13 @@ function withSuspense<T extends object>(
       fallbackOverride === undefined ? fallback : fallbackOverride
 
     return (
-      <Suspense fallback={resolvedFallback}>
+      <Suspense fallback={resolvedFallback} name={displayName}>
         <Component {...(props as T)} />
       </Suspense>
     )
   }
 
-  WithSuspense.displayName = `WithSuspense(${Component.displayName ?? Component.name})`
+  WithSuspense.displayName = displayName
 
   return WithSuspense
 }
