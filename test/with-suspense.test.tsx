@@ -9,15 +9,25 @@ type Props = {
   name: string
 }
 
+// A promise that never resolves — suspends any component that throws it permanently
+const neverResolves = new Promise<void>(() => {})
+
 function Greeting({ name }: Props): ReactElement {
+  if (name === 'no') throw neverResolves
+
   return <p>Hello, {name}</p>
 }
 
-// A component that always suspends — used to test fallback rendering
-const neverResolves = new Promise<void>(() => {})
-
 function SuspendingComponent(): ReactElement {
   throw neverResolves
+}
+
+type LoadingMessageProps = {
+  text?: string
+}
+
+function LoadingMessage({ text = '...' }: LoadingMessageProps): ReactElement {
+  return <p>Loading, {text}</p>
 }
 
 const fallback = <p>Loading...</p>
@@ -31,9 +41,11 @@ describe('withSuspense', () => {
   })
 
   it('renders the wrapped component when not suspended', async () => {
-    render(<WrappedGreeting name="squid" />)
+    const name = 'squid'
 
-    expect(await screen.findByText('Hello, squid')).toBeInTheDocument()
+    render(<WrappedGreeting name={name} />)
+
+    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 
   it('renders the definition-time fallback while suspended', () => {
@@ -43,14 +55,56 @@ describe('withSuspense', () => {
   })
 
   it('renders the usage-site fallback override when provided', () => {
-    render(<WrappedSuspending fallback={<p>Please wait...</p>} />)
+    const message = 'Please wait...'
 
-    expect(screen.getByText('Please wait...')).toBeInTheDocument()
+    const fallback = <p>{message}</p>
+
+    render(<WrappedSuspending fallback={fallback} />)
+
+    expect(screen.getByText(message)).toBeInTheDocument()
   })
 
   it('renders nothing while suspended when fallback is null', () => {
     const { container } = render(<WrappedSuspending fallback={null} />)
 
     expect(container).toBeEmptyDOMElement()
+  })
+
+  it('renders a component without props as the usage-site fallback override', () => {
+    const fallback = <LoadingMessage />
+
+    render(<WrappedSuspending fallback={fallback} />)
+
+    expect(screen.getByText('Loading, ...')).toBeInTheDocument()
+  })
+
+  it('renders a component with props as the usage-site fallback override', () => {
+    const text = 'Please wait...'
+
+    const fallback = <LoadingMessage text={text} />
+
+    render(<WrappedSuspending fallback={fallback} />)
+
+    expect(screen.getByText(`Loading, ${text}`)).toBeInTheDocument()
+  })
+
+  it('renders the fallback with a prop-derived value while the component is suspended', () => {
+    const name = 'no'
+
+    const fallback = <LoadingMessage text={name} />
+
+    render(<WrappedGreeting name={name} fallback={fallback} />)
+
+    expect(screen.getByText(`Loading, ${name}`)).toBeInTheDocument()
+  })
+
+  it('renders the component with a prop-derived value and not the fallback when not suspended', async () => {
+    const name = 'yes'
+
+    const fallback = <LoadingMessage text={name} />
+
+    render(<WrappedGreeting name={name} fallback={fallback} />)
+
+    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 })
