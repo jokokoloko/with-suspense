@@ -41,9 +41,11 @@ describe('withSuspense', () => {
   })
 
   it('renders the wrapped component when not suspended', async () => {
-    render(<WrappedGreeting name="squid" />)
+    const name = 'squid'
 
-    expect(await screen.findByText('Hello, squid')).toBeInTheDocument()
+    render(<WrappedGreeting name={name} />)
+
+    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 
   it('renders the definition-time fallback while suspended', () => {
@@ -53,9 +55,13 @@ describe('withSuspense', () => {
   })
 
   it('renders the usage-site fallback override when provided', () => {
-    render(<WrappedSuspending fallback={<p>Please wait...</p>} />)
+    const message = 'Please wait...'
 
-    expect(screen.getByText('Please wait...')).toBeInTheDocument()
+    const fallback = <p>{message}</p>
+
+    render(<WrappedSuspending fallback={fallback} />)
+
+    expect(screen.getByText(message)).toBeInTheDocument()
   })
 
   it('renders nothing while suspended when fallback is null', () => {
@@ -65,36 +71,40 @@ describe('withSuspense', () => {
   })
 
   it('renders a component without props as the usage-site fallback override', () => {
-    render(<WrappedSuspending fallback={<LoadingMessage />} />)
+    const fallback = <LoadingMessage />
+
+    render(<WrappedSuspending fallback={fallback} />)
 
     expect(screen.getByText('Loading, ...')).toBeInTheDocument()
   })
 
   it('renders a component with props as the usage-site fallback override', () => {
-    render(
-      <WrappedSuspending fallback={<LoadingMessage text="Please wait..." />} />,
-    )
+    const text = 'Please wait...'
 
-    expect(screen.getByText('Loading, Please wait...')).toBeInTheDocument()
+    const fallback = <LoadingMessage text={text} />
+
+    render(<WrappedSuspending fallback={fallback} />)
+
+    expect(screen.getByText(`Loading, ${text}`)).toBeInTheDocument()
   })
 
   it('renders the fallback with a prop-derived value while the component is suspended', () => {
     const name = 'no'
 
-    render(
-      <WrappedGreeting name={name} fallback={<LoadingMessage text={name} />} />,
-    )
+    const fallback = <LoadingMessage text={name} />
 
-    expect(screen.getByText('Loading, no')).toBeInTheDocument()
+    render(<WrappedGreeting name={name} fallback={fallback} />)
+
+    expect(screen.getByText(`Loading, ${name}`)).toBeInTheDocument()
   })
 
   it('renders the component with a prop-derived value and not the fallback when not suspended', async () => {
     const name = 'yes'
 
-    render(
-      <WrappedGreeting name={name} fallback={<LoadingMessage text={name} />} />,
-    )
+    const fallback = <LoadingMessage text={name} />
 
-    expect(await screen.findByText('Hello, yes')).toBeInTheDocument()
+    render(<WrappedGreeting name={name} fallback={fallback} />)
+
+    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 })
