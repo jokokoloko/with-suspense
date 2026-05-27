@@ -20,10 +20,18 @@ function SuspendingComponent(): ReactElement {
   throw neverResolves
 }
 
+// A component with props that suspends when name is 'slow'
+function SlowGreeting({ name }: Props): ReactElement {
+  if (name === 'slow') throw neverResolves
+
+  return <p>Hello, {name}</p>
+}
+
 const fallback = <p>Loading...</p>
 
 const WrappedGreeting = withSuspense(Greeting, fallback)
 const WrappedSuspending = withSuspense(SuspendingComponent, fallback)
+const WrappedSlowGreeting = withSuspense(SlowGreeting, fallback)
 
 describe('withSuspense', () => {
   it('sets displayName on the wrapped component', () => {
@@ -50,6 +58,20 @@ describe('withSuspense', () => {
 
   it('renders nothing while suspended when fallback is null', () => {
     const { container } = render(<WrappedSuspending fallback={null} />)
+
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('renders the usage-site fallback override when provided for a component with props', () => {
+    render(<WrappedSlowGreeting name="slow" fallback={<p>Please wait...</p>} />)
+
+    expect(screen.getByText('Please wait...')).toBeInTheDocument()
+  })
+
+  it('renders nothing while suspended when fallback is null for a component with props', () => {
+    const { container } = render(
+      <WrappedSlowGreeting name="slow" fallback={null} />,
+    )
 
     expect(container).toBeEmptyDOMElement()
   })
