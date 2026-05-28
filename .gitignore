@@ -15,8 +15,6 @@
 
 # debug
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
@@ -33,4 +31,5 @@ yarn-error.log*
 *.sw?
 
 # claude
-.claude/settings.local.json
+.claude/*
+!.claude/settings.json
