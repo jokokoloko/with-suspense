@@ -10,10 +10,12 @@ type Props<T> = T & {
   devToolsName?: string
 }
 
+type WrappedComponent<T> = (props: Props<T>) => ReactElement
+
 function withSuspense<T extends object>(
   Component: ComponentType<T>,
   fallback: ReactNode = 'Loading...',
-): (props: Props<T>) => ReactElement {
+): WrappedComponent<T> {
   const displayName = `withSuspense(${Component.displayName ?? Component.name})`
 
   function WithSuspense({
@@ -41,3 +43,4 @@ function withSuspense<T extends object>(
 export default withSuspense
 
 export type { Props as WithSuspenseProps }
+export type { WrappedComponent as WithSuspenseComponent }
