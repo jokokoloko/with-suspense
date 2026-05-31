@@ -42,7 +42,7 @@ function withSuspense<T extends object>(
 
 export default withSuspense
 
-export type {
-  Props as WithSuspenseProps,
-  WrappedComponent as WithSuspenseComponent,
+export {
+  type Props as WithSuspenseProps,
+  type WrappedComponent as WithSuspenseComponent,
 }
