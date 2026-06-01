@@ -11,7 +11,7 @@ npm install @jokokoloko/with-suspense
 ## Usage
 
 ```tsx
-import type { ReactElement } from 'react'
+import { type ReactElement } from 'react'
 
 import { withSuspense } from '@jokokoloko/with-suspense'
 
