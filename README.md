@@ -56,7 +56,7 @@ Pass `null` to suppress the fallback entirely:
 export default withSuspense(UserCard, fallback)
 ```
 
-**Region boundary** — to make several components reveal together as one unit, wrap a single composing component: the one suspending point that resolves the data and passes it to presentational children.
+**Container boundary** — to make several components reveal together as one unit, wrap a single container component: the one suspending point that resolves the data and passes it to presentational children.
 
 ```tsx
 async function Profile({ id }: Props): Promise<ReactElement> {
@@ -76,7 +76,7 @@ const fallback = <ProfileSkeleton />
 export default withSuspense(Profile, fallback)
 ```
 
-`Avatar` and `Details` receive resolved data as props and never suspend, so the whole region reveals together behind `Profile`'s single boundary.
+`Avatar` and `Details` receive resolved data as props and never suspend, so the whole container reveals together behind `Profile`'s single boundary.
 
 **Manual control** — if a consumer needs to place the boundary themselves (for example, to group several independently-suspending components under one `<Suspense>`), export the unwrapped component alongside the wrapped default:
 
