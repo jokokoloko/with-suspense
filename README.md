@@ -46,6 +46,66 @@ Pass `null` to suppress the fallback entirely:
 <UserCard id="1" fallback={null} />
 ```
 
+## Boundary placement
+
+`withSuspense` is purely additive over `<Suspense>` — it never removes a capability. The wrapped component is an ordinary component, `<Suspense>` still works everywhere it always did, and where a boundary sits is simply a matter of _which_ component you wrap.
+
+**Leaf boundary** — wrap a leaf and each instance streams in behind its own boundary, independently:
+
+```tsx
+export default withSuspense(UserCard, fallback)
+```
+
+**Region boundary** — to make several components reveal together as one unit, wrap a single composing component: the one suspending point that resolves the data and passes it to presentational children.
+
+```tsx
+async function Profile({ id }: Props): Promise<ReactElement> {
+  const user = await getUser(id)
+
+  return (
+    <>
+      <Avatar src={user.avatar} />
+
+      <Details user={user} />
+    </>
+  )
+}
+
+const fallback = <ProfileSkeleton />
+
+export default withSuspense(Profile, fallback)
+```
+
+`Avatar` and `Details` receive resolved data as props and never suspend, so the whole region reveals together behind `Profile`'s single boundary.
+
+**Manual control** — if a consumer needs to place the boundary themselves (for example, to group several independently-suspending components under one `<Suspense>`), export the unwrapped component alongside the wrapped default:
+
+```tsx
+// default export — wrapped, for the common case
+export default withSuspense(UserCard, fallback)
+
+// named export — unwrapped, for full manual control
+export { UserCard }
+```
+
+Importing the named export gives the original component, free to wrap however you like:
+
+```tsx
+import { Suspense } from 'react'
+
+import { UserCard } from './user-card'
+
+function Page() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <UserCard id="1" />
+    </Suspense>
+  )
+}
+```
+
+Between wrapping at the right level and the unwrapped export, every boundary arrangement you could build by hand with `<Suspense>` stays available — `withSuspense` only removes the boilerplate for the common case.
+
 ## API
 
 ### `withSuspense(Component, fallback?)`
