@@ -1,4 +1,4 @@
-# with-suspense
+# withSuspense
 
 A higher-order component that wraps a React component in a `Suspense` boundary.
 
