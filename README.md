@@ -78,7 +78,7 @@ export default withSuspense(Profile, fallback)
 
 `Avatar` and `Details` receive resolved data as props and never suspend, so the whole container reveals together behind `Profile`'s single boundary.
 
-When neither of these placements fits — for example, to group several independently-suspending components under one `<Suspense>` — see [Escape hatch](#escape-hatch) below.
+When a `withSuspense`-wrapped component needs to participate in a container boundary rather than suspending against its own, see [Escape hatch](#escape-hatch) below.
 
 ## Escape hatch
 
@@ -94,20 +94,25 @@ export { UserCard }
 
 This is a convention for the component author, not something `withSuspense` enforces. It is a zero-compromise approach: the HOC handles the common case cleanly, and the escape hatch is always available without reaching into the component's internals.
 
-Importing the named export gives the original component, free to wrap however you like:
+The primary use is composing unwrapped components inside a container boundary — each suspends against the container's boundary rather than its own, so they all reveal together:
 
 ```tsx
-import { Suspense } from 'react'
+import { UserBio } from './user-bio' // unwrapped
+import { UserCard } from './user-card' // unwrapped
 
-import { UserCard } from './user-card'
-
-function Page() {
+function Profile({ id }: Props): ReactElement {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <UserCard id="1" />
-    </Suspense>
+    <>
+      <UserCard id={id} />
+
+      <UserBio id={id} />
+    </>
   )
 }
+
+const fallback = <ProfileSkeleton />
+
+export default withSuspense(Profile, fallback)
 ```
 
 It also makes resolving a double-wrap a one-character fix — switching from `import UserCard` to `import { UserCard }` gives the unwrapped version and full control over the `<Suspense>` boundary, with no changes needed to the component definition itself.
