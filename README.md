@@ -177,11 +177,11 @@ function Page(): ReactElement {
 }
 ```
 
-It also makes resolving a double-wrap a one-character fix — switching from `import UserCard` to `import { UserCard }` gives the unwrapped version and full control over the `<Suspense>` boundary, with no changes needed to the component definition itself.
+It also makes resolving a double-wrap a one-character fix — see [Double-wrap caution](#double-wrap-caution) below.
 
 Between wrapping at the right level and the unwrapped export, every boundary arrangement you could build by hand with `<Suspense>` stays available — `withSuspense` only removes the usage-site boilerplate for the common case.
 
-### Double-wrap caution
+## Double-wrap caution
 
 Applying a `<Suspense>` boundary around a `withSuspense`-wrapped component causes the outer boundary to never fire. React resolves a suspension at the nearest `<Suspense>` ancestor — which is the inner one from `withSuspense`. No error or warning is thrown; the outer fallback silently never appears:
 
