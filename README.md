@@ -223,43 +223,6 @@ export default withSuspense(CommentsList, fallback)
 
 Wrapping a sub-component defined inside a page or layout creates a module-level `const` at the point where `withSuspense` is called — and `const` declarations are not hoisted. Any component or variable referenced before that `const` must be defined above it, which constrains file layout in ways that functions alone do not. Moving the component into its own file eliminates the constraint.
 
-### Route-private components
-
-When a component is only used by one page, colocate it inside that route's directory rather than in a shared components folder. Apply `withSuspense` to its default export, and the page imports it cleanly by name:
-
-```text
-src/app/database/
-  action/
-    comments-list.tsx   ← withSuspense applied here
-    page.tsx            ← imports and uses <CommentsList />
-```
-
-```tsx
-// comments-list.tsx
-async function CommentsList(): Promise<ReactElement> { ... }
-
-const fallback = <p>Loading comments...</p>
-
-export default withSuspense(CommentsList, fallback)
-```
-
-```tsx
-// page.tsx
-import CommentsList from './comments-list'
-
-function ActionPage(): ReactElement {
-  return (
-    <main>
-      <CommentsList />
-    </main>
-  )
-}
-
-export default ActionPage
-```
-
-The consumer never sees `withSuspense` — the component imports and renders exactly like any other component.
-
 ### Naming the wrapped export
 
 How a component file names its exports signals which version is primary. Two patterns cover most cases:
