@@ -48,7 +48,7 @@ Pass `null` to suppress the fallback entirely:
 
 ## Boundary placement
 
-`withSuspense` is purely additive over `<Suspense>` — it never removes a capability. The wrapped component is an ordinary component, `<Suspense>` still works everywhere it always did, and where a boundary sits is simply a matter of _which_ component you wrap.
+`withSuspense` is purely additive over `<Suspense>` — it never removes a capability. The wrapped component is an ordinary component, `<Suspense>` still works everywhere it always did, and where a boundary sits is simply a matter of _which_ component you wrap with `withSuspense`.
 
 **Leaf boundary** — wrap a leaf and each instance streams in behind its own boundary, independently:
 
