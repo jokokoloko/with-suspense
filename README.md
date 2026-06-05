@@ -78,7 +78,11 @@ export default withSuspense(Profile, fallback)
 
 `Avatar` and `Details` receive resolved data as props and never suspend, so the whole container reveals together behind `Profile`'s single boundary.
 
-**Manual control** — if a consumer needs to place the boundary themselves (for example, to group several independently-suspending components under one `<Suspense>`), export the unwrapped component alongside the wrapped default:
+When neither of these placements fits — for example, to group several independently-suspending components under one `<Suspense>` — see [Escape hatch](#escape-hatch) below.
+
+## Escape hatch
+
+A component author who wants to give consumers full manual control can export both the unwrapped and wrapped versions from their component file:
 
 ```tsx
 // default export — wrapped, for the common case
@@ -87,6 +91,8 @@ export default withSuspense(UserCard, fallback)
 // named export — unwrapped, for full manual control
 export { UserCard }
 ```
+
+This is a convention for the component author, not something `withSuspense` enforces. It is a zero-compromise approach: the HOC handles the common case cleanly, and the escape hatch is always available without reaching into the component's internals.
 
 Importing the named export gives the original component, free to wrap however you like:
 
@@ -103,6 +109,8 @@ function Page() {
   )
 }
 ```
+
+It also makes resolving a double-wrap a one-character fix — switching from `import UserCard` to `import { UserCard }` gives the unwrapped version and full control over the `<Suspense>` boundary, with no changes needed to the component definition itself.
 
 Between wrapping at the right level and the unwrapped export, every boundary arrangement you could build by hand with `<Suspense>` stays available — `withSuspense` only removes the boilerplate for the common case.
 
