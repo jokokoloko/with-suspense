@@ -115,9 +115,25 @@ const fallback = <ProfileSkeleton />
 export default withSuspense(Profile, fallback)
 ```
 
+The unwrapped version also works directly with a raw `<Suspense>` boundary when that fits better:
+
+```tsx
+import { Suspense } from 'react'
+
+import { UserCard } from './user-card' // unwrapped
+
+function Page(): ReactElement {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <UserCard id="1" />
+    </Suspense>
+  )
+}
+```
+
 It also makes resolving a double-wrap a one-character fix — switching from `import UserCard` to `import { UserCard }` gives the unwrapped version and full control over the `<Suspense>` boundary, with no changes needed to the component definition itself.
 
-Between wrapping at the right level and the unwrapped export, every boundary arrangement you could build by hand with `<Suspense>` stays available — `withSuspense` only removes the boilerplate for the common case.
+Between wrapping at the right level and the unwrapped export, every boundary arrangement you could build by hand with `<Suspense>` stays available — `withSuspense` only removes the usage-site boilerplate for the common case.
 
 ## API
 
