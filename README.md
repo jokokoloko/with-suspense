@@ -209,20 +209,6 @@ The `fallback` prop is the correct API for per-usage overrides. If full manual `
 
 ## Conventions
 
-### Default exports only
-
-`withSuspense` wraps the default export of a file — never an internal sub-component. The wrapping is the last thing before the export:
-
-```tsx
-async function CommentsList(): Promise<ReactElement> { ... }
-
-const fallback = <p>Loading comments...</p>
-
-export default withSuspense(CommentsList, fallback)
-```
-
-Wrapping a sub-component defined inside a page or layout creates a module-level `const` at the point where `withSuspense` is called — and `const` declarations are not hoisted. Any component or variable referenced before that `const` must be defined above it, which constrains file layout in ways that functions alone do not. Moving the component into its own file eliminates the constraint.
-
 ### Naming the wrapped export
 
 How a component file names its exports signals which version is primary. Two patterns cover most cases:
