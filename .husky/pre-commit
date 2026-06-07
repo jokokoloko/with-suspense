@@ -1,3 +1,14 @@
+# Block direct commits to protected branches
+protected_branches=("main")
+branch="$(git rev-parse --abbrev-ref HEAD)"
+for protected in "${protected_branches[@]}"; do
+  if [ "$branch" = "$protected" ]; then
+    echo "Direct commits to $protected are blocked. Create a feature branch first."
+    exit 1
+  fi
+done
+
+# Verify required files have not been deleted
 required_files=(".markdownlint.json")
 for f in "${required_files[@]}"; do
   if [ ! -f "$f" ]; then
