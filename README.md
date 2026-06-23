@@ -20,9 +20,9 @@ type Props = {
 }
 
 async function UserCard({ id }: Props): Promise<ReactElement> {
-  const user = await getUser(id)
+  const { name } = await getUser(id)
 
-  return <div>{user.name}</div>
+  return <div>{name}</div>
 }
 
 const fallback = <p>Loading...</p>
