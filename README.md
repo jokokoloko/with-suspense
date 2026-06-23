@@ -53,11 +53,11 @@ The second argument to `withSuspense` determines what renders while the componen
 | Second argument          | Fallback behavior                             |
 | ------------------------ | --------------------------------------------- |
 | Nothing (or `undefined`) | Renders `'Loading...'` — the built-in default |
-| `null`                   | Renders nothing                               |
 | Any `ReactNode`          | Renders that value                            |
+| `null`                   | Renders nothing                               |
 
-- **`null`** — renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use for components that are visually secondary or where a flash of placeholder content would be jarring.
 - **A visible fallback** — use when the user benefits from knowing content is loading. A spinner, skeleton, or text string.
+- **`null`** — renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use for components that are visually secondary or where a flash of placeholder content would be jarring.
 
 Always provide an explicit value rather than relying on the built-in `'Loading...'` default.
 
@@ -223,18 +223,20 @@ const fallback = <p>Loading comments...</p>
 export default withSuspense(CommentsList, fallback)
 
 export { CommentsList }
+// also consider aliasing to flag that it needs its own boundary, e.g.
+// export { CommentsList as CommentsListWithoutSuspense } or { CommentsList as CommentsListNeedsSuspense }
 ```
 
-**Wrapped as named, unwrapped as default** — when the unwrapped component is genuinely the primary version:
+**Wrapped as named, unwrapped as default** — when the wrapped version should carry a more descriptive name that signals it streams in (e.g. `CommentsListStreaming`):
 
 ```tsx
 async function CommentsList(): Promise<ReactElement> { ... }
 
+export default CommentsList
+
 const fallback = <p>Loading comments...</p>
 
 const CommentsListStreaming = withSuspense(CommentsList, fallback)
-
-export default CommentsList
 
 export { CommentsListStreaming }
 ```
