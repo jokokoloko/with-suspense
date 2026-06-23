@@ -59,7 +59,7 @@ The second argument to `withSuspense` determines what renders while the componen
 - **A visible fallback** — use when the user benefits from knowing content is loading. A spinner, skeleton, or text string.
 - **`null`** — renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use for components that are visually secondary or where a flash of placeholder content would be jarring.
 
-Prefer providing an explicit value rather than relying on the built-in `'Loading...'` default.
+Providing an explicit value rather than relying on the built-in `'Loading...'` default keeps the loading state intentional.
 
 ### `null` at the usage site
 
@@ -92,13 +92,13 @@ export default withSuspense(CommentsList, fallback)
 
 `withSuspense` is purely additive over `<Suspense>` — it never removes a capability. The wrapped component is an ordinary component, `<Suspense>` still works everywhere it always did, and where a boundary sits is simply a matter of _which_ component you wrap with `withSuspense`.
 
-**Independent boundary** — wrap a component and each instance streams in behind its own boundary:
+**Independent boundary** — wrapping a component gives each instance its own boundary, streaming in independently:
 
 ```tsx
 export default withSuspense(UserCard, fallback)
 ```
 
-**Container boundary** — to make several components reveal together as one unit, wrap a single container component: the one suspending point that resolves the data and passes it to presentational children.
+**Container boundary** — wrapping a single container component (the one suspending point that resolves the data and passes it to presentational children) makes several components reveal together as one unit:
 
 ```tsx
 async function Profile({ id }: Props): Promise<ReactElement> {
