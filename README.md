@@ -6,6 +6,10 @@ A higher-order component that wraps a React component in a `Suspense` boundary.
 
 ```bash
 npm install @jokokoloko/with-suspense
+# or
+pnpm add @jokokoloko/with-suspense
+# or
+yarn add @jokokoloko/with-suspense
 ```
 
 ## Usage
@@ -32,20 +36,6 @@ export default withSuspense(UserCard, fallback)
 
 The wrapped component renders its `Suspense` boundary automatically — no need to add one at the usage site.
 
-### Override the fallback at the usage site
-
-The `fallback` prop can be overridden per usage when a different loading state is needed:
-
-```tsx
-<UserCard id="1" fallback={<UserCardSkeleton />} />
-```
-
-Pass `null` to suppress the fallback entirely:
-
-```tsx
-<UserCard id="1" fallback={null} />
-```
-
 ## Fallback
 
 The second argument to `withSuspense` determines what renders while the component suspends:
@@ -61,15 +51,6 @@ The second argument to `withSuspense` determines what renders while the componen
 
 Providing an explicit value rather than relying on the built-in `'Loading...'` default keeps the loading state intentional.
 
-### `null` at the usage site
-
-The `fallback` prop uses a strict `=== undefined` check internally — `null` suppresses consistently at both the definition site and the usage site. Passing `null` as the `fallback` prop suppresses the fallback for that render; omitting the prop falls through to the definition-time default:
-
-```tsx
-<CommentsList />                 // uses definition-time fallback
-<CommentsList fallback={null} /> // suppresses — renders nothing
-```
-
 ### The `fallback` const
 
 Extracting the fallback to a named `const fallback` before the `withSuspense` call, rather than passing JSX inline, keeps the export line clean and the fallback easy to find and update:
@@ -77,15 +58,30 @@ Extracting the fallback to a named `const fallback` before the `withSuspense` ca
 ```tsx
 const fallback = <p>Loading...</p>
 
-export default withSuspense(CommentsList, fallback)
+export default withSuspense(UserCard, fallback)
 ```
 
-When a skeleton component is ready, it is a one-line swap. Using JSX (`<Skeleton />`) rather than a bare component reference preserves the ability to pass props at definition time:
+When a skeleton component is ready, it is a one-line swap. Using JSX (`<UserCardSkeleton />`) rather than a bare component reference preserves the ability to pass props at definition time:
 
 ```tsx
-const fallback = <Skeleton type="list" />
+const fallback = <UserCardSkeleton variant="compact" />
 
-export default withSuspense(CommentsList, fallback)
+export default withSuspense(UserCard, fallback)
+```
+
+### Overriding the fallback at a usage site
+
+The wrapped component also accepts a `fallback` prop, which overrides the definition-time fallback for that one usage:
+
+```tsx
+<UserCard id="1" fallback={<UserCardSkeleton />} />
+```
+
+Passing `null` suppresses the fallback entirely for that usage. The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site — only omitting the prop falls through to the definition-time fallback:
+
+```tsx
+<UserCard id="1" />                 // uses the definition-time fallback
+<UserCard id="1" fallback={null} /> // suppresses — renders nothing
 ```
 
 ## Boundary placement
@@ -120,7 +116,7 @@ export default withSuspense(Profile, fallback)
 
 `Avatar` and `Details` receive resolved data as props and never suspend, so the whole container reveals together behind `Profile`'s single boundary.
 
-When a `withSuspense`-wrapped component needs to participate in a container boundary rather than suspending against its own, see [Escape hatch](#escape-hatch) below.
+A container boundary can be reached two ways: the container resolves the data itself and passes props to presentational children, as above, or it composes children that each fetch their own data using the unwrapped exports from the [Escape hatch](#escape-hatch) below.
 
 ## Escape hatch
 
@@ -183,61 +179,59 @@ Applying a `<Suspense>` boundary around a `withSuspense`-wrapped component cause
 
 ```tsx
 // avoid — outer Suspense never fires, outer fallback silently ignored
-<Suspense fallback={<CommentsListSkeletonA />}>
-  <CommentsList /> {/* already wrapped in withSuspense */}
+<Suspense fallback={<UserCardSkeletonA />}>
+  <UserCard id="1" /> {/* already wrapped in withSuspense */}
 </Suspense>
 
 // correct — use the fallback prop for per-usage overrides
-<CommentsList fallback={<CommentsListSkeletonA />} />
+<UserCard id="1" fallback={<UserCardSkeletonA />} />
 ```
 
-To make the failure concrete: if `CommentsList` has a definition-time fallback of `<CommentsListSkeletonB />` and a consumer wraps it expecting `<CommentsListSkeletonA />` to appear, only `<CommentsListSkeletonB />` ever renders — silently, with no error or warning:
+To make the failure concrete: if `UserCard` has a definition-time fallback of `<UserCardSkeletonB />` and a consumer wraps it expecting `<UserCardSkeletonA />` to appear, only `<UserCardSkeletonB />` ever renders — silently, with no error or warning:
 
 ```tsx
-// CommentsListSkeletonA is never rendered — withSuspense's inner boundary
+// UserCardSkeletonA is never rendered — withSuspense's inner boundary
 // intercepts the suspension before the outer one fires
-<Suspense fallback={<CommentsListSkeletonA />}>
-  <CommentsList fallback={<CommentsListSkeletonB />} />
+<Suspense fallback={<UserCardSkeletonA />}>
+  <UserCard id="1" fallback={<UserCardSkeletonB />} />
 </Suspense>
 ```
 
 The `fallback` prop is the correct API for per-usage overrides. If full manual `<Suspense>` control is needed, use the [unwrapped escape hatch export](#escape-hatch) instead.
 
-## Conventions
-
-### Naming the wrapped export
+## Naming the wrapped export
 
 How a component file names its exports signals which version is primary. Two patterns cover most cases:
 
 **Wrapped as default, unwrapped as named** (recommended) — the wrapped version is what most consumers want:
 
 ```tsx
-async function CommentsList(): Promise<ReactElement> { ... }
+async function UserCard({ id }: Props): Promise<ReactElement> { ... }
 
-const fallback = <p>Loading comments...</p>
+const fallback = <p>Loading...</p>
 
-export default withSuspense(CommentsList, fallback)
+export default withSuspense(UserCard, fallback)
 
-export { CommentsList }
+export { UserCard }
 // also consider aliasing to flag that it needs its own boundary, e.g.
-// export { CommentsList as CommentsListWithoutSuspense } or { CommentsList as CommentsListNeedsSuspense }
+// export { UserCard as UserCardWithoutSuspense } or { UserCard as UserCardNeedsSuspense }
 ```
 
-**Wrapped as named, unwrapped as default** — when the wrapped version should carry a more descriptive name that signals it streams in (e.g. `CommentsListStreaming`):
+**Wrapped as named, unwrapped as default** — when the wrapped version should carry a more descriptive name that signals it streams in (e.g. `UserCardStreaming`):
 
 ```tsx
-async function CommentsList(): Promise<ReactElement> { ... }
+async function UserCard({ id }: Props): Promise<ReactElement> { ... }
 
-export default CommentsList
+export default UserCard
 
-const fallback = <p>Loading comments...</p>
+const fallback = <p>Loading...</p>
 
-const CommentsListStreaming = withSuspense(CommentsList, fallback)
+const UserCardStreaming = withSuspense(UserCard, fallback)
 
-export { CommentsListStreaming }
+export { UserCardStreaming }
 ```
 
-The name `CommentsListStreaming` signals at the import site that this version handles its own suspension.
+The name `UserCardStreaming` signals at the import site that this version handles its own suspension.
 
 ## API
 
@@ -252,7 +246,7 @@ Returns a new component that accepts all of `Component`'s original props plus an
 
 ### `fallback` prop (on the returned component)
 
-| Value       | Behaviour                                                     |
+| Value       | Behavior                                                      |
 | ----------- | ------------------------------------------------------------- |
 | omitted     | Uses the fallback passed to `withSuspense` at definition time |
 | `ReactNode` | Overrides the definition-time fallback at this usage site     |
@@ -260,7 +254,7 @@ Returns a new component that accepts all of `Component`'s original props plus an
 
 ## Requirements
 
-React 16.6 or later (`Suspense` was introduced in React 16.6).
+React 16.6 or later (`Suspense` was introduced in React 16.6). `withSuspense` is plain React — it works anywhere a component can suspend; the examples here use async components, but nothing ties it to a particular framework.
 
 ## License
 
