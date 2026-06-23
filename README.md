@@ -2,21 +2,15 @@
 
 A higher-order component that wraps a React component in a `<Suspense>` boundary.
 
-## Why withSuspense
-
-The standard way to stream a component splits one logical unit across two places: the component holds the suspending call, while every parent that renders it holds the `<Suspense>` boundary and its fallback. The boundary and fallback are repeated at each usage site, and it is easy to render the component without a boundary by mistake.
-
-`withSuspense` keeps all three concerns — the suspending component, its boundary, and its fallback — together in the component's own file. Consumers import the wrapped component and render it like any other; the boundary travels with it, so it cannot be forgotten and the fallback is defined in exactly one place.
+`withSuspense` bundles all three concerns of a streaming component — the component itself, its `<Suspense>` boundary, and its fallback — into the component's own file, so the files that render it stay free of `<Suspense>` boilerplate. Consumers import the wrapped component and render it like any other: the boundary travels with it and the fallback is defined in exactly one place.
 
 ## Install
 
 ```bash
 npm install @jokokoloko/with-suspense
-# or
-pnpm add @jokokoloko/with-suspense
-# or
-yarn add @jokokoloko/with-suspense
 ```
+
+Also available via `pnpm add` and `yarn add`.
 
 ## Usage
 
