@@ -1,6 +1,12 @@
 # withSuspense
 
-A higher-order component that wraps a React component in a `Suspense` boundary.
+A higher-order component that wraps a React component in a `<Suspense>` boundary.
+
+## Why withSuspense
+
+The standard way to stream a component splits one logical unit across two places: the component holds the suspending call, while every parent that renders it holds the `<Suspense>` boundary and its fallback. The boundary and fallback are repeated at each usage site, and it is easy to render the component without a boundary by mistake.
+
+`withSuspense` keeps all three concerns — the suspending component, its boundary, and its fallback — together in the component's own file. Consumers import the wrapped component and render it like any other; the boundary travels with it, so it cannot be forgotten and the fallback is defined in exactly one place.
 
 ## Install
 
@@ -34,7 +40,7 @@ const fallback = <p>Loading...</p>
 export default withSuspense(UserCard, fallback)
 ```
 
-The wrapped component renders its `Suspense` boundary automatically — no need to add one at the usage site.
+The wrapped component renders its `<Suspense>` boundary automatically — no need to add one at the usage site.
 
 ## Fallback
 
@@ -117,6 +123,46 @@ export default withSuspense(Profile, fallback)
 `Avatar` and `Details` receive resolved data as props and never suspend, so the whole container reveals together behind `Profile`'s single boundary.
 
 A container boundary can be reached two ways: the container resolves the data itself and passes props to presentational children, as above, or it composes children that each fetch their own data using the unwrapped exports from the [Escape hatch](#escape-hatch) below.
+
+## Streaming patterns
+
+The examples above use async components that `await` their data, but `withSuspense` only provides the boundary — it works with any component that suspends. A common alternative is to start a fetch without awaiting it, pass the pending promise down, and resolve it with React's `use` hook in the component that needs it:
+
+```tsx
+'use client'
+
+import { use, type ReactElement } from 'react'
+
+import { withSuspense } from '@jokokoloko/with-suspense'
+
+type Props = {
+  userPromise: Promise<User>
+}
+
+function UserCard({ userPromise }: Props): ReactElement {
+  const { name } = use(userPromise)
+
+  return <div>{name}</div>
+}
+
+const fallback = <p>Loading...</p>
+
+export default withSuspense(UserCard, fallback)
+```
+
+The parent starts the fetch and passes the unresolved promise as a prop; `use` suspends until it resolves, and the wrapped boundary shows the fallback in the meantime:
+
+```tsx
+function Page(): ReactElement {
+  const userPromise = getUser('1')
+
+  return <UserCard userPromise={userPromise} />
+}
+```
+
+### Relationship to route-level loading
+
+Frameworks with file-based routing (such as Next.js) provide a route-level loading file that wraps an entire route segment in its own boundary. That boundary and a `withSuspense` boundary compose: the route-level fallback covers the initial shell, and individual `withSuspense` components stream in within it, each with its own finer-grained fallback. Reach for the route-level file for the whole-page loading state, and `withSuspense` for the pieces inside it.
 
 ## Escape hatch
 
@@ -232,6 +278,28 @@ export { UserCardStreaming }
 ```
 
 The name `UserCardStreaming` signals at the import site that this version handles its own suspension.
+
+## Why a higher-order component
+
+A higher-order component composes at the export boundary, so the `<Suspense>` boundary is declared once in the component's own file:
+
+```tsx
+export default withSuspense(UserCard, fallback)
+```
+
+A wrapper component — `<WithSuspense fallback={...}><UserCard /></WithSuspense>` — would push that boundary back to every usage site, recreating the repetition of the raw `<Suspense>` pattern: each parent has to remember to wrap the component and to supply the fallback. It also has no clean way to expose a per-usage `fallback` prop on `UserCard` itself; the override would live on the wrapper instead.
+
+The HOC keeps the boundary co-located with the component while still exposing the unwrapped component for the cases that need manual control (see [Escape hatch](#escape-hatch)).
+
+## Drawbacks
+
+`withSuspense` is a thin convenience over `<Suspense>`, and that shapes where it does and does not pay off:
+
+- **It adds a layer of indirection.** The default export is a generated wrapper, not the component as authored. In React DevTools and stack traces it appears as a `withSuspense(UserCard)` layer around the real component.
+- **A nested manual boundary silently no-ops.** Wrapping an already-wrapped component in another `<Suspense>` does nothing, with no warning — see [Double-wrap caution](#double-wrap-caution).
+- **It is component-level, not route-level.** For a boundary around an entire route, a framework's route-level loading file is the better fit — see [Streaming patterns](#streaming-patterns).
+- **For a single one-off boundary, inline `<Suspense>` may read more clearly** than introducing the dependency. The value grows with the number of components that each own a boundary; for one, the raw element is fine.
+- **When manual boundary control is always needed,** the wrapped layer is bypassed through the escape hatch every time — at which point plain `<Suspense>` is the simpler tool.
 
 ## API
 
