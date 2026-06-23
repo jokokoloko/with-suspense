@@ -59,7 +59,7 @@ The second argument to `withSuspense` determines what renders while the componen
 - **A visible fallback** — use when the user benefits from knowing content is loading. A spinner, skeleton, or text string.
 - **`null`** — renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use for components that are visually secondary or where a flash of placeholder content would be jarring.
 
-Always provide an explicit value rather than relying on the built-in `'Loading...'` default.
+Prefer providing an explicit value rather than relying on the built-in `'Loading...'` default.
 
 ### `null` at the usage site
 
@@ -72,7 +72,7 @@ The `fallback` prop uses a strict `=== undefined` check internally — `null` su
 
 ### The `fallback` const
 
-Extract the fallback to a named `const fallback` before the `withSuspense` call rather than passing JSX inline:
+We recommend extracting the fallback to a named `const fallback` before the `withSuspense` call rather than passing JSX inline:
 
 ```tsx
 // recommended
@@ -80,7 +80,7 @@ const fallback = <p>Loading...</p>
 
 export default withSuspense(CommentsList, fallback)
 
-// avoid
+// also works — inline JSX is just harder to find and swap later
 export default withSuspense(CommentsList, <p>Loading...</p>)
 ```
 
