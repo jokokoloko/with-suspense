@@ -72,7 +72,7 @@ The `fallback` prop uses a strict `=== undefined` check internally — `null` su
 
 ### The `fallback` const
 
-We recommend extracting the fallback to a named `const fallback` before the `withSuspense` call rather than passing JSX inline:
+Extracting the fallback to a named `const fallback` before the `withSuspense` call, rather than passing JSX inline, keeps the export line clean and the fallback easy to find and update:
 
 ```tsx
 // recommended
@@ -84,7 +84,7 @@ export default withSuspense(CommentsList, fallback)
 export default withSuspense(CommentsList, <p>Loading...</p>)
 ```
 
-This keeps the export line clean and makes the fallback easy to find and update. When a skeleton component is ready, it is a one-line swap. Using JSX (`<Skeleton />`) rather than a bare component reference preserves the ability to pass props at definition time:
+When a skeleton component is ready, it is a one-line swap. Using JSX (`<Skeleton />`) rather than a bare component reference preserves the ability to pass props at definition time:
 
 ```tsx
 const fallback = <Skeleton type="list" />
