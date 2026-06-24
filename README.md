@@ -258,23 +258,9 @@ The `fallback` prop is the correct API for per-usage overrides. If full manual `
 
 ## Naming the wrapped export
 
-How a component file names its exports signals which version is primary. Two patterns cover most cases:
+Throughout this README the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
-**Wrapped as default, unwrapped as named** (recommended) — the wrapped version is what most consumers want:
-
-```tsx
-async function UserCard({ id }: Props): Promise<ReactElement> { ... }
-
-const fallback = <p>Loading...</p>
-
-export default withSuspense(UserCard, fallback)
-
-export { UserCard }
-// also consider aliasing to flag that it needs its own boundary, e.g.
-// export { UserCard as UserCardWithoutSuspense } or { UserCard as UserCardNeedsSuspense }
-```
-
-**Wrapped as named, unwrapped as default** — when the wrapped version should carry a more descriptive name that signals it streams in (e.g. `UserCardStreaming`):
+For all its boilerplate, the raw `<Suspense>` pattern has one advantage: it makes streaming visible at the usage site, where a reader sees the boundary and knows exactly where and what suspends. That signal can be kept while still using `withSuspense` — give the wrapped export a more descriptive name and export the plain component as the default:
 
 ```tsx
 async function UserCard({ id }: Props): Promise<ReactElement> { ... }
@@ -288,7 +274,7 @@ const UserCardStreaming = withSuspense(UserCard, fallback)
 export { UserCardStreaming }
 ```
 
-The name `UserCardStreaming` signals at the import site that this version handles its own suspension.
+At the usage site, `<UserCardStreaming />` announces that this version handles its own suspension — recovering the visibility of the raw `<Suspense>` pattern without its boilerplate.
 
 ## API
 
