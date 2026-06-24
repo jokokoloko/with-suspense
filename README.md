@@ -290,28 +290,6 @@ export { UserCardStreaming }
 
 The name `UserCardStreaming` signals at the import site that this version handles its own suspension.
 
-## Why a higher-order component
-
-A higher-order component composes at the export boundary, so the `<Suspense>` boundary is declared once in the component's own file:
-
-```tsx
-export default withSuspense(UserCard, fallback)
-```
-
-A wrapper component — `<WithSuspense fallback={...}><UserCard /></WithSuspense>` — would push that boundary back to every usage site, recreating the repetition of the raw `<Suspense>` pattern: each parent has to remember to wrap the component and to supply the fallback. It also has no clean way to expose a per-usage `fallback` prop on `UserCard` itself; the override would live on the wrapper instead.
-
-The HOC keeps the boundary co-located with the component while still exposing the unwrapped component for the cases that need manual control (see [Escape hatch](#escape-hatch)).
-
-## Drawbacks
-
-`withSuspense` is a thin convenience over `<Suspense>`, and that shapes where it does and does not pay off:
-
-- **It adds a layer of indirection.** The default export is a generated wrapper, not the component as authored. In React DevTools and stack traces it appears as a `withSuspense(UserCard)` layer around the real component.
-- **A nested manual boundary silently no-ops.** Wrapping an already-wrapped component in another `<Suspense>` does nothing, with no warning — see [Double-wrap caution](#double-wrap-caution).
-- **It is component-level, not route-level.** For a boundary around an entire route, a framework's route-level loading file is the better fit — see [Streaming patterns](#streaming-patterns).
-- **For a single one-off boundary, inline `<Suspense>` may read more clearly** than introducing the dependency. The value grows with the number of components that each own a boundary; for one, the raw element is fine.
-- **When manual boundary control is always needed,** the wrapped layer is bypassed through the escape hatch every time — at which point plain `<Suspense>` is the simpler tool.
-
 ## API
 
 ### `withSuspense(Component, fallback?)`
@@ -321,7 +299,7 @@ The HOC keeps the boundary co-located with the component while still exposing th
 | `Component` | `ComponentType<T>` | — | The component to wrap |
 | `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
 
-Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides.
+Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides. In React DevTools and stack traces, the returned component is named after the component it wraps — for example, `withSuspense(UserCard)`.
 
 ### `fallback` prop (on the returned component)
 
