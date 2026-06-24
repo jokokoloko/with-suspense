@@ -71,18 +71,27 @@ export default withSuspense(UserCard, fallback)
 
 ### Overriding the fallback at a usage site
 
-The wrapped component also accepts a `fallback` prop, which overrides the definition-time fallback for that one usage:
+The wrapped component also accepts a `fallback` prop, giving each usage site control over its own fallback.
+
+Omitting the prop uses the definition-time fallback:
+
+```tsx
+<UserCard id="1" />
+```
+
+Passing any `ReactNode` overrides the definition-time fallback for that one usage:
 
 ```tsx
 <UserCard id="1" fallback={<UserCardSkeleton />} />
 ```
 
-Passing `null` suppresses the fallback entirely for that usage. The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site — only omitting the prop falls through to the definition-time fallback:
+Passing `null` suppresses the fallback entirely, rendering nothing while the component suspends:
 
 ```tsx
-<UserCard id="1" />                 // uses the definition-time fallback
-<UserCard id="1" fallback={null} /> // suppresses — renders nothing
+<UserCard id="1" fallback={null} />
 ```
+
+The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site — only omitting the prop falls through to the definition-time fallback.
 
 ## Boundary placement
 
