@@ -309,6 +309,8 @@ Returns a new component that accepts all of `Component`'s original props plus an
 | `ReactNode` | Overrides the definition-time fallback at this usage site     |
 | `null`      | Suppresses the fallback — renders nothing while suspended     |
 
+The prop is resolved with a strict `=== undefined` check: only an omitted prop falls through to the definition-time fallback. Passing `null` therefore suppresses the fallback rather than reverting to the default — the same behavior `null` has as the second argument to `withSuspense`.
+
 ## Requirements
 
 React 16.6 or later (`Suspense` was introduced in React 16.6). `withSuspense` is plain React — it works anywhere a component can suspend; the examples here use async components, but nothing ties it to a particular framework.
