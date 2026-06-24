@@ -61,8 +61,6 @@ Extracting the fallback to a named `const fallback` before the `withSuspense` ca
 const fallback = <p>Loading...</p>
 
 export default withSuspense(UserCard, fallback)
-
-export { UserCard }
 ```
 
 When a skeleton component is ready, it is a one-line swap. Using JSX (`<UserCardSkeleton />`) rather than a bare component reference preserves the ability to pass props at definition time:
@@ -71,8 +69,6 @@ When a skeleton component is ready, it is a one-line swap. Using JSX (`<UserCard
 const fallback = <UserCardSkeleton variant="compact" />
 
 export default withSuspense(UserCard, fallback)
-
-export { UserCard }
 ```
 
 ### Overriding the fallback at a usage site
@@ -127,6 +123,8 @@ async function Profile({ id }: Props): Promise<ReactElement> {
 const fallback = <ProfileSkeleton />
 
 export default withSuspense(Profile, fallback)
+
+export { Profile }
 ```
 
 `Avatar` and `Details` receive resolved data as props and never suspend, so the whole container reveals together behind `Profile`'s single boundary.
@@ -208,6 +206,8 @@ function Profile({ id }: Props): ReactElement {
 const fallback = <ProfileSkeleton />
 
 export default withSuspense(Profile, fallback)
+
+export { Profile }
 ```
 
 The unwrapped version also works directly with a raw `<Suspense>` boundary when that fits better:
