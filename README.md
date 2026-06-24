@@ -32,6 +32,8 @@ async function UserCard({ id }: Props): Promise<ReactElement> {
 const fallback = <p>Loading...</p>
 
 export default withSuspense(UserCard, fallback)
+
+export { UserCard }
 ```
 
 The wrapped component renders its `<Suspense>` boundary automatically — no need to add one at the usage site.
@@ -59,6 +61,8 @@ Extracting the fallback to a named `const fallback` before the `withSuspense` ca
 const fallback = <p>Loading...</p>
 
 export default withSuspense(UserCard, fallback)
+
+export { UserCard }
 ```
 
 When a skeleton component is ready, it is a one-line swap. Using JSX (`<UserCardSkeleton />`) rather than a bare component reference preserves the ability to pass props at definition time:
@@ -67,6 +71,8 @@ When a skeleton component is ready, it is a one-line swap. Using JSX (`<UserCard
 const fallback = <UserCardSkeleton variant="compact" />
 
 export default withSuspense(UserCard, fallback)
+
+export { UserCard }
 ```
 
 ### Overriding the fallback at a usage site
@@ -151,6 +157,8 @@ function UserCard({ userPromise }: Props): ReactElement {
 const fallback = <p>Loading...</p>
 
 export default withSuspense(UserCard, fallback)
+
+export { UserCard }
 ```
 
 The parent starts the fetch and passes the unresolved promise as a prop; `use` suspends until it resolves, and the wrapped boundary shows the fallback in the meantime:
