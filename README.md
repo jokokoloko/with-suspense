@@ -256,11 +256,21 @@ To make the failure concrete: if `UserCard` has a definition-time fallback of `<
 
 The `fallback` prop is the correct API for per-usage overrides. If full manual `<Suspense>` control is needed, use the [unwrapped escape hatch export](#escape-hatch) instead.
 
-## Naming the wrapped export
+## Naming to signal streaming
 
 Throughout this README the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
-For all its boilerplate, the raw `<Suspense>` pattern has one advantage: it makes streaming visible at the usage site, where a reader sees the boundary and knows exactly where and what suspends. That signal can be kept while still using `withSuspense` — give the wrapped export a more descriptive name and export the plain component as the default:
+For all its boilerplate, the raw `<Suspense>` pattern has one advantage: it makes streaming visible at the usage site, where a reader sees the boundary and knows exactly where and what suspends. A descriptive name keeps that signal while still using `withSuspense`.
+
+The wrapped component is a default export, so the importer chooses its name. A consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
+
+```tsx
+import UserCardStreaming from './user-card'
+```
+
+`<UserCardStreaming />` then reads as a streaming component at that usage site.
+
+To make that name canonical so every consumer gets it without renaming, bake it into the component file — export the plain component as the default and the wrapped version under a descriptive name:
 
 ```tsx
 async function UserCard({ id }: Props): Promise<ReactElement> { ... }
@@ -274,7 +284,7 @@ const UserCardStreaming = withSuspense(UserCard, fallback)
 export { UserCardStreaming }
 ```
 
-At the usage site, `<UserCardStreaming />` announces that this version handles its own suspension — recovering the visibility of the raw `<Suspense>` pattern without its boilerplate.
+Either way, `<UserCardStreaming />` announces at the usage site that this version handles its own suspension — recovering the visibility of the raw `<Suspense>` pattern without its boilerplate.
 
 ## API
 
