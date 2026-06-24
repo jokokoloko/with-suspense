@@ -231,7 +231,9 @@ The prop is resolved with a strict `=== undefined` check: only an omitted prop f
 
 ## Requirements
 
-React 16.6 or later (`Suspense` was introduced in React 16.6). `withSuspense` is plain React — it works anywhere a component can suspend.
+React 16.6 or later (`Suspense` was introduced in React 16.6).
+
+`withSuspense` is plain React — it works anywhere a component can suspend.
 
 ## License
 
