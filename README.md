@@ -109,29 +109,6 @@ export { UserCard }
 
 This is a recommended convention for the component author, not something `withSuspense` enforces. It is a zero-compromise approach: the HOC handles the common case cleanly, and the escape hatch is always available without reaching into the component's internals.
 
-The primary use is composing unwrapped components inside a container boundary — each suspends against the container's boundary rather than its own, so they all reveal together:
-
-```tsx
-import { UserBio } from './user-bio' // unwrapped
-import { UserCard } from './user-card' // unwrapped
-
-function Profile({ id }: Props): ReactElement {
-  return (
-    <>
-      <UserCard id={id} />
-
-      <UserBio id={id} />
-    </>
-  )
-}
-
-const fallback = <ProfileSkeleton />
-
-export default withSuspense(Profile, fallback)
-
-export { Profile }
-```
-
 The unwrapped version also works directly with a raw `<Suspense>` boundary when that fits better:
 
 ```tsx
