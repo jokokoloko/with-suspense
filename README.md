@@ -95,6 +95,8 @@ Passing `null` suppresses the fallback entirely, rendering nothing while the com
 
 The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site — only omitting the prop falls through to the definition-time fallback.
 
+**Avoid wrapping the component in your own `<Suspense>`.** It already carries its own boundary, so an outer one never fires — React resolves the suspension at the inner boundary first, and the outer fallback silently never appears, with no error or warning. To change the fallback at a usage site, use the `fallback` prop above; for full manual `<Suspense>` control, reach for the unwrapped [escape hatch](#escape-hatch) export.
+
 ## Escape hatch
 
 A component author who wants to give consumers full manual control can export both the unwrapped and wrapped versions from their component file:
@@ -109,33 +111,7 @@ export { UserCard }
 
 This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default covers the common case, while the unwrapped export stays available without reaching into the component's internals.
 
-The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own — use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. It also makes resolving a double-wrap a one-character fix (see [Double-wrap caution](#double-wrap-caution)).
-
-## Double-wrap caution
-
-Applying a `<Suspense>` boundary around a `withSuspense`-wrapped component causes the outer boundary to never fire. React resolves a suspension at the nearest `<Suspense>` ancestor — which is the inner one from `withSuspense`. No error or warning is thrown; the outer fallback silently never appears:
-
-```tsx
-// avoid — outer Suspense never fires, outer fallback silently ignored
-<Suspense fallback={<UserCardSkeletonA />}>
-  <UserCard id="1" /> {/* already wrapped in withSuspense */}
-</Suspense>
-
-// correct — use the fallback prop for per-usage overrides
-<UserCard id="1" fallback={<UserCardSkeletonA />} />
-```
-
-To make the failure concrete: if `UserCard` has a definition-time fallback of `<UserCardSkeletonB />` and a consumer wraps it expecting `<UserCardSkeletonA />` to appear, only `<UserCardSkeletonB />` ever renders — silently, with no error or warning:
-
-```tsx
-// UserCardSkeletonA is never rendered — withSuspense's inner boundary
-// intercepts the suspension before the outer one fires
-<Suspense fallback={<UserCardSkeletonA />}>
-  <UserCard id="1" fallback={<UserCardSkeletonB />} />
-</Suspense>
-```
-
-The `fallback` prop is the correct API for per-usage overrides. If full manual `<Suspense>` control is needed, use the [unwrapped escape hatch export](#escape-hatch) instead.
+The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own — use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test.
 
 ## Naming to signal streaming
 
