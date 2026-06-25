@@ -107,27 +107,9 @@ export default withSuspense(UserCard, fallback)
 export { UserCard }
 ```
 
-This is a recommended convention for the component author, not something `withSuspense` enforces. It is a zero-compromise approach: the HOC handles the common case cleanly, and the escape hatch is always available without reaching into the component's internals.
+This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default covers the common case, and the unwrapped export stays available without reaching into the component's internals.
 
-The unwrapped version also works directly with a raw `<Suspense>` boundary when that fits better:
-
-```tsx
-import { Suspense } from 'react'
-
-import { UserCard } from './user-card' // unwrapped
-
-function Page(): ReactElement {
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <UserCard id="1" />
-    </Suspense>
-  )
-}
-```
-
-It also makes resolving a double-wrap a one-character fix — see [Double-wrap caution](#double-wrap-caution) below.
-
-Between wrapping at the right level and the unwrapped export, every boundary arrangement you could build by hand with `<Suspense>` stays available — `withSuspense` only removes the usage-site boilerplate for the common case.
+The unwrapped export is an ordinary component with no boundary of its own — use it wherever you need full manual control, such as under your own `<Suspense>` or in a test. It also makes resolving a double-wrap a one-character fix (see [Double-wrap caution](#double-wrap-caution)).
 
 ## Double-wrap caution
 
