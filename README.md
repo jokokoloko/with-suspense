@@ -107,7 +107,7 @@ export default withSuspense(UserCard, fallback)
 export { UserCard }
 ```
 
-This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default covers the common case, and the unwrapped export stays available without reaching into the component's internals.
+This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default covers the common case, while the unwrapped export stays available without reaching into the component's internals.
 
 The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own — use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. It also makes resolving a double-wrap a one-character fix (see [Double-wrap caution](#double-wrap-caution)).
 
