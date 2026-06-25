@@ -107,7 +107,7 @@ export default withSuspense(UserCard, fallback)
 export { UserCard }
 ```
 
-This is a convention for the component author, not something `withSuspense` enforces. It is a zero-compromise approach: the HOC handles the common case cleanly, and the escape hatch is always available without reaching into the component's internals.
+This is a recommended convention for the component author, not something `withSuspense` enforces. It is a zero-compromise approach: the HOC handles the common case cleanly, and the escape hatch is always available without reaching into the component's internals.
 
 The primary use is composing unwrapped components inside a container boundary — each suspends against the container's boundary rather than its own, so they all reveal together:
 
