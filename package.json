@@ -4,10 +4,16 @@
   "description": "A higher-order component that wraps a React component in a Suspense boundary",
   "keywords": [
     "react",
+    "typescript",
     "suspense",
-    "hoc",
+    "streaming",
+    "fallback",
     "higher-order-component",
-    "typescript"
+    "hoc",
+    "nextjs",
+    "app-router",
+    "react-server-components",
+    "rsc"
   ],
   "homepage": "https://github.com/jokokoloko/with-suspense#readme",
   "bugs": {
