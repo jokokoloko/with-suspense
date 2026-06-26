@@ -141,7 +141,7 @@ export default UserCard
 export { UserCardStreaming }
 ```
 
-With either approach, `<UserCardStreaming />` announces at the usage site that this version handles its own suspension — recovering the visibility of the raw `<Suspense>` pattern without its boilerplate.
+With either approach, the usage site reads `<UserCardStreaming />` rather than a plain `<UserCard />` — the name alone signaling that the component streams.
 
 ## API
 
