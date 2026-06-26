@@ -125,8 +125,6 @@ When the wrapped component is a default export, a consumer who wants the usage s
 import UserCardStreaming from './user-card'
 ```
 
-`<UserCardStreaming />` then reads as a streaming component at that usage site.
-
 To make that name canonical so every consumer gets it without renaming, bake it into the component file — export the plain component as the default and the wrapped version under a descriptive name:
 
 ```tsx
