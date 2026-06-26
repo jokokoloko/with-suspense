@@ -141,7 +141,7 @@ export default UserCard
 export { UserCardStreaming }
 ```
 
-Either way, `<UserCardStreaming />` announces at the usage site that this version handles its own suspension — recovering the visibility of the raw `<Suspense>` pattern without its boilerplate.
+With either approach, `<UserCardStreaming />` announces at the usage site that this version handles its own suspension — recovering the visibility of the raw `<Suspense>` pattern without its boilerplate.
 
 ## API
 
