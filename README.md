@@ -95,11 +95,11 @@ Passing `null` suppresses the fallback entirely, rendering nothing while the com
 
 The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site — only omitting the prop falls through to the definition-time fallback.
 
-**Avoid wrapping a `withSuspense`-wrapped component in your own `<Suspense>`.** It already carries its own boundary, so an additional outer boundary never fires — React resolves the suspension at the inner boundary first, causing the outer boundary's fallback to silently fail and never appear, with no error or warning. To change the fallback at a usage site, use the `fallback` prop above; for full manual `<Suspense>` control, reach for the unwrapped [escape hatch](#escape-hatch) export.
+**Avoid wrapping a `withSuspense`-wrapped component in your own `<Suspense>`.** It already carries its own boundary, so an additional outer boundary never fires — React resolves the suspension at the inner boundary first, causing the outer boundary's fallback to silently fail and never appear, with no error or warning. To change the fallback at a usage site, use the `fallback` prop shown above; for full manual `<Suspense>` control, reach for the unwrapped [escape hatch](#escape-hatch) export.
 
 ## Escape hatch
 
-A component author who wants to give consumers full manual control can export both the unwrapped and wrapped versions from their component file:
+A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
 // default export — wrapped, for the common case
