@@ -132,11 +132,11 @@ To make that name canonical so every consumer gets it without renaming, bake it 
 ```tsx
 async function UserCard({ id }: Props): Promise<ReactElement> { ... }
 
-export default UserCard
-
 const fallback = <p>Loading user...</p>
 
 const UserCardStreaming = withSuspense(UserCard, fallback)
+
+export default UserCard
 
 export { UserCardStreaming }
 ```
