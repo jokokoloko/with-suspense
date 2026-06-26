@@ -29,7 +29,7 @@ async function UserCard({ id }: Props): Promise<ReactElement> {
   return <div>{name}</div>
 }
 
-const fallback = <p>Loading...</p>
+const fallback = <p>Loading user...</p>
 
 export default withSuspense(UserCard, fallback)
 
@@ -58,7 +58,7 @@ Providing an explicit value rather than relying on the built-in `'Loading...'` d
 Extracting the fallback to a named `const fallback` before the `withSuspense` call, rather than passing JSX inline, keeps the export line clean and the fallback easy to find and update:
 
 ```tsx
-const fallback = <p>Loading...</p>
+const fallback = <p>Loading user...</p>
 
 export default withSuspense(UserCard, fallback)
 ```
@@ -134,7 +134,7 @@ async function UserCard({ id }: Props): Promise<ReactElement> { ... }
 
 export default UserCard
 
-const fallback = <p>Loading...</p>
+const fallback = <p>Loading user...</p>
 
 const UserCardStreaming = withSuspense(UserCard, fallback)
 
