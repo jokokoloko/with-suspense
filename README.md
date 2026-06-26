@@ -117,7 +117,7 @@ The unwrapped export is an ordinary component with no `<Suspense>` boundary of i
 
 Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
-For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes visible which components stream — a reader sees each boundary right at the usage site. That same visibility can be gained with `withSuspense` by giving the wrapped export a descriptive name that signals streaming.
+For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes visible which components stream — each boundary can be seen right at the usage site. That same visibility can be gained with `withSuspense` by giving the wrapped export a descriptive name that signals streaming.
 
 When the wrapped component is a default export, a consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
 
