@@ -44,7 +44,7 @@ The second argument to `withSuspense` determines what renders while the componen
 
 | Second argument          | Fallback behavior                             |
 | ------------------------ | --------------------------------------------- |
-| Nothing (or `undefined`) | Renders `'Loading...'` — the built-in default |
+| Omitted (or `undefined`) | Renders `'Loading...'` — the built-in default |
 | Any `ReactNode`          | Renders that value                            |
 | `null`                   | Renders nothing                               |
 
@@ -156,11 +156,11 @@ Returns a new component that accepts all of `Component`'s original props plus an
 
 ### `fallback` prop (on the returned component)
 
-| Value       | Behavior                                                      |
-| ----------- | ------------------------------------------------------------- |
-| omitted     | Uses the fallback passed to `withSuspense` at definition time |
-| `ReactNode` | Overrides the definition-time fallback at this usage site     |
-| `null`      | Suppresses the fallback — renders nothing while suspended     |
+| Value | Behavior |
+| --- | --- |
+| Omitted (or `undefined`) | Uses the fallback passed to `withSuspense` at definition time |
+| `ReactNode` | Overrides the definition-time fallback at this usage site |
+| `null` | Suppresses the fallback — renders nothing while suspended |
 
 Passing `null` suppresses the fallback rather than reverting to the default — the same behavior it has as the second argument to `withSuspense`.
 
