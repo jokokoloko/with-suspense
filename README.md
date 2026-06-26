@@ -119,7 +119,7 @@ Throughout this documentation the wrapped component is the default export under 
 
 For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes streaming visible at the usage site, where a reader sees the boundary and knows exactly where and what suspends. That same visibility can be gained with `withSuspense` by giving the wrapped export a descriptive name that signals streaming.
 
-The wrapped component is a default export, so the importer chooses its name. A consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
+When the wrapped component is a default export, the importer chooses its name. A consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
 
 ```tsx
 import UserCardStreaming from './user-card'
