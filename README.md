@@ -102,14 +102,14 @@ The prop uses a strict `=== undefined` check internally, so `null` suppresses co
 A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
-// default export — wrapped, for the common case
+// default export — wrapped, for common use
 export default withSuspense(UserCard, fallback)
 
 // named export — unwrapped, for full manual control
 export { UserCard }
 ```
 
-This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default covers the common case, while the unwrapped export stays available without reaching into the component's internals.
+This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default handles common usage, while the unwrapped export stays available without reaching into the component's internals.
 
 The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own — use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test.
 
@@ -117,7 +117,7 @@ The unwrapped export is an ordinary component with no `<Suspense>` boundary of i
 
 Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
-For all its boilerplate, the raw `<Suspense>` pattern has one advantage: it makes streaming visible at the usage site, where a reader sees the boundary and knows exactly where and what suspends. A descriptive name keeps that signal while still using `withSuspense`.
+For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes streaming visible at the usage site, where a reader sees the boundary and knows exactly where and what suspends. That visibility can be kept while using `withSuspense` by giving the wrapped export a descriptive name that signals streaming.
 
 The wrapped component is a default export, so the importer chooses its name. A consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
 
