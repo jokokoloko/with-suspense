@@ -141,7 +141,7 @@ export default UserCard
 export { UserCardStreaming }
 ```
 
-With either approach, the usage site reads `<UserCardStreaming />`, which signals that this component streams and handles its own suspension.
+With either approach, the usage site reads `<UserCardStreaming />`, which signals that the component streams and handles its own suspension.
 
 ## API
 
