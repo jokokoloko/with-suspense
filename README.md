@@ -153,9 +153,9 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 ### The wrapped component
 
-`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
+`withSuspense` returns a new component that accepts all of `Component`'s original props plus `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
 
-#### `fallback` prop
+#### `fallback` prop (optional)
 
 | Value | Behavior |
 | --- | --- |
@@ -165,9 +165,9 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 Passing `null` suppresses the fallback rather than reverting to the default — the same behavior it has as the second argument to `withSuspense`.
 
-#### `devToolsName` prop
+#### `devToolsName` prop (optional)
 
-Overrides the label React DevTools shows for the wrapped component's `<Suspense>` boundary at a given usage. Defaults to `withSuspense(Component)`.
+By default the `<Suspense>` boundary carries the component's `withSuspense(Component)` label in React DevTools. `devToolsName` renames just that boundary for a given usage, leaving the component's label untouched.
 
 ## Requirements
 
