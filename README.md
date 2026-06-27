@@ -36,7 +36,7 @@ export default withSuspense(UserCard, fallback)
 export { UserCard }
 ```
 
-The wrapped component renders its `<Suspense>` boundary automatically — no need to add one at the usage site.
+The wrapped component renders its own `<Suspense>` boundary automatically — no need to add one at the usage site.
 
 ## Fallback
 
