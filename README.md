@@ -117,7 +117,7 @@ The unwrapped export is an ordinary component with no `<Suspense>` boundary of i
 
 Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
-For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes visible which components stream — each boundary can be seen right at the usage site. That same visibility can be recovered with `withSuspense` by giving the wrapped component a descriptive name that signals streaming.
+For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes visible which components stream — each boundary can be seen right at the usage site. That same visibility is kept with `withSuspense` by giving the wrapped component a descriptive name that signals streaming.
 
 When the wrapped component is a default export, a consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
 
@@ -150,9 +150,9 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | `Component` | `ComponentType<T>` | — | The component to wrap |
 | `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
 
-Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides. In React DevTools and stack traces, the returned component is named after the component it wraps — for example, `withSuspense(UserCard)`.
+Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides. In React DevTools and stack traces, the wrapped component appears as `withSuspense(UserCard)`.
 
-### `fallback` prop (on the returned component)
+### `fallback` prop (on the wrapped component)
 
 | Value | Behavior |
 | --- | --- |
