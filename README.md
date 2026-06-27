@@ -149,6 +149,8 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | `Component` | `ComponentType<T>` | — | The component to wrap |
 | `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
 
+`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default. The generic `T` is inferred from `Component`, so the wrapped component is typed with the same props automatically.
+
 ### Wrapped component
 
 `withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
