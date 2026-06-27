@@ -26,10 +26,8 @@ function withSuspense<T extends object>(
     const resolvedFallback =
       fallbackOverride === undefined ? fallback : fallbackOverride
 
-    const resolvedName = devToolsName ?? displayName
-
     return (
-      <Suspense fallback={resolvedFallback} name={resolvedName}>
+      <Suspense fallback={resolvedFallback} name={devToolsName}>
         <Component {...(props as T)} />
       </Suspense>
     )
