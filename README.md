@@ -149,7 +149,7 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | `Component` | `ComponentType<T>` | — | The component to wrap |
 | `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
 
-Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides. In React DevTools and stack traces, the wrapped component appears as `withSuspense(Component)`.
+Returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, the wrapped component appears as `withSuspense(Component)`.
 
 ### `fallback` prop (on the wrapped component)
 
@@ -160,6 +160,10 @@ Returns a new component that accepts all of `Component`'s original props plus an
 | `null` | Suppresses the fallback — renders nothing while suspended |
 
 Passing `null` suppresses the fallback rather than reverting to the default — the same behavior it has as the second argument to `withSuspense`.
+
+### `devToolsName` prop (on the wrapped component)
+
+Overrides the label React DevTools shows for the wrapped component's `<Suspense>` boundary at a given usage. Defaults to `withSuspense(Component)`.
 
 ## Requirements
 
