@@ -153,7 +153,7 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 ### The wrapped component
 
-`withSuspense` returns a new component that accepts all of `Component`'s original props plus `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
+`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
 
 #### `fallback` prop (optional)
 
