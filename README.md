@@ -54,7 +54,7 @@ Providing an explicit value rather than relying on the built-in `'Loading...'` d
 
 ### The `fallback` const
 
-Extracting the fallback to a named `const fallback` before the `withSuspense` call, rather than passing JSX inline, keeps the export line clean and the fallback easy to find and update:
+Extracting the fallback to a `const fallback` before the `withSuspense` call, rather than passing JSX inline, keeps the export line clean and the fallback easy to find and update:
 
 ```tsx
 const fallback = <p>Loading user...</p>
