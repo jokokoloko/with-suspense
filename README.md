@@ -48,8 +48,7 @@ The second argument to `withSuspense` determines what renders while the componen
 | Any `ReactNode`          | Renders that value                            |
 | `null`                   | Renders nothing                               |
 
-- **A visible fallback** — use when the user benefits from knowing content is loading. A spinner, skeleton, or text string.
-- **`null`** — renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use for components that are visually secondary or where a flash of placeholder content would be jarring.
+Passing `null` renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use it for components that are visually secondary or where a flash of placeholder content would be jarring.
 
 Providing an explicit value rather than relying on the built-in `'Loading...'` default keeps the loading state intentional.
 
