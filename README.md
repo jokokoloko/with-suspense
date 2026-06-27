@@ -150,7 +150,7 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | `Component` | `ComponentType<T>` | — | The component to wrap |
 | `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
 
-Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides. In React DevTools and stack traces, the wrapped component appears as `withSuspense(UserCard)`.
+Returns a new component that accepts all of `Component`'s original props plus an optional `fallback` prop for per-usage overrides. In React DevTools and stack traces, the wrapped component appears as `withSuspense(Component)`.
 
 ### `fallback` prop (on the wrapped component)
 
