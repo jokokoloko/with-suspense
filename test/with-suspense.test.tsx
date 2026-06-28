@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 
 import { withSuspense } from '../src'
 
-// A promise that never resolves, so a component that throws it stays suspended for the test
-const pending = new Promise<void>(() => {})
+// A component that throws this stays suspended for the whole test
+const neverResolves = new Promise<void>(() => {})
 
 type UserCardProps = {
   name: string
@@ -14,7 +14,7 @@ type UserCardProps = {
 
 // Ada's data never resolves in these tests, so her card suspends; any other name renders
 function UserCard({ name }: UserCardProps): ReactElement {
-  if (name === 'Ada') throw pending
+  if (name === 'Ada') throw neverResolves
 
   return <p>Welcome, {name}</p>
 }
@@ -26,7 +26,7 @@ type UserCardSkeletonProps = {
 function UserCardSkeleton({
   label = 'user',
 }: UserCardSkeletonProps): ReactElement {
-  return <p>Loading {label}</p>
+  return <p>Loading {label}...</p>
 }
 
 const fallback = <UserCardSkeleton />
@@ -53,7 +53,7 @@ describe('withSuspense', () => {
   it('renders the fallback argument while the component is suspended', () => {
     render(<WrappedUserCard name="Ada" />)
 
-    expect(screen.getByText('Loading user')).toBeInTheDocument()
+    expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
   it('renders nothing while the component is suspended when the fallback argument is null', () => {
@@ -77,7 +77,7 @@ describe('the wrapped component', () => {
 
     render(<WrappedUserCard name={name} fallback={fallback} />)
 
-    expect(screen.getByText(`Loading ${name}`)).toBeInTheDocument()
+    expect(screen.getByText(`Loading ${name}...`)).toBeInTheDocument()
   })
 
   it('suppresses the fallback when the fallback prop is null', () => {
