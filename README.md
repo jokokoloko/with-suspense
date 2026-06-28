@@ -167,7 +167,7 @@ Passing `null` suppresses the fallback rather than reverting to the default — 
 
 #### `devToolsName` prop (optional)
 
-By default the `<Suspense>` boundary has no name, exactly like a hand-written `<Suspense>` — it sits nested under the `withSuspense(Component)` wrapper, which identifies it in React DevTools. `devToolsName` gives the boundary its own name there for a given usage.
+By default the `<Suspense>` boundary is anonymous, like the usual `<Suspense>` boilerplate — it is nested within the `withSuspense(Component)` wrapper, which identifies its owner in React DevTools. `devToolsName` gives the boundary its own name there for a given usage.
 
 ## Requirements
 
