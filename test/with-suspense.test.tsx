@@ -86,7 +86,17 @@ describe('the wrapped component', () => {
     expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
-  it('renders the override fallback when the fallback prop is set', () => {
+  it('renders the override fallback without a usage-site value', () => {
+    const name = 'Ada'
+
+    const fallback = <UserCardSkeleton />
+
+    render(<WrappedUserCard name={name} fallback={fallback} />)
+
+    expect(screen.getByText('Loading user...')).toBeInTheDocument()
+  })
+
+  it('renders the override fallback with a usage-site value', () => {
     const name = 'Ada'
 
     const fallback = <UserCardSkeleton label={name} />
