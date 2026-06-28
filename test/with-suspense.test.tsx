@@ -43,13 +43,13 @@ describe('withSuspense', () => {
   it('renders the definition-time fallback when one is given', () => {
     const name = 'Ada'
 
-    const fallback = <UserCardSkeleton label={name} />
+    const fallback = <UserCardSkeleton />
 
     const WrappedUserCard = withSuspense(UserCard, fallback)
 
     render(<WrappedUserCard name={name} />)
 
-    expect(screen.getByText(`Loading ${name}...`)).toBeInTheDocument()
+    expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
   it('renders nothing by suppressing the fallback when null is given', () => {
