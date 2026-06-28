@@ -30,7 +30,7 @@ function UserCardSkeleton({
 }
 
 describe('withSuspense', () => {
-  it('renders the built-in fallback when no fallback argument is given', () => {
+  it('renders the built-in fallback when none is given', () => {
     const name = 'Ada'
 
     const WrappedUserCard = withSuspense(UserCard)
@@ -40,7 +40,7 @@ describe('withSuspense', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
-  it('renders the fallback argument while the component is suspended', () => {
+  it('renders the definition-time fallback when one is given', () => {
     const name = 'Ada'
 
     const fallback = <UserCardSkeleton />
@@ -52,7 +52,7 @@ describe('withSuspense', () => {
     expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
-  it('renders nothing while the component is suspended when the fallback argument is null', () => {
+  it('renders nothing when null is given', () => {
     const name = 'Ada'
 
     const fallback = null
