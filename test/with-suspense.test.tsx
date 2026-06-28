@@ -80,6 +80,14 @@ describe('withSuspense', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
+  it('renders the built-in fallback while suspended when no fallback is provided', () => {
+    const Wrapped = withSuspense(SuspendingComponent)
+
+    render(<Wrapped />)
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
+  })
+
   it('renders the usage-site fallback override when provided', () => {
     const message = 'Please wait...'
 
@@ -92,6 +100,14 @@ describe('withSuspense', () => {
 
   it('renders nothing while suspended when fallback is null', () => {
     const { container } = render(<WrappedSuspending fallback={null} />)
+
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('renders nothing while suspended when the definition-time fallback is null', () => {
+    const Wrapped = withSuspense(SuspendingComponent, null)
+
+    const { container } = render(<Wrapped />)
 
     expect(container).toBeEmptyDOMElement()
   })
