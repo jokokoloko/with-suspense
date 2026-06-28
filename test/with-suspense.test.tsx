@@ -78,7 +78,7 @@ describe('the wrapped component', () => {
     expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 
-  it('uses the definition-time fallback when the fallback prop is omitted', () => {
+  it('renders the definition-time fallback when the fallback prop is omitted', () => {
     const name = 'Ada'
 
     render(<WrappedUserCard name={name} />)
@@ -86,7 +86,7 @@ describe('the wrapped component', () => {
     expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
-  it('overrides the definition-time fallback with the fallback prop', () => {
+  it('renders the override fallback when the fallback prop is set', () => {
     const name = 'Ada'
 
     const fallback = <UserCardSkeleton label={name} />
@@ -96,7 +96,7 @@ describe('the wrapped component', () => {
     expect(screen.getByText(`Loading ${name}...`)).toBeInTheDocument()
   })
 
-  it('suppresses the fallback when the fallback prop is null', () => {
+  it('renders nothing by suppressing the fallback when the fallback prop is null', () => {
     const name = 'Ada'
 
     const fallback = null
@@ -112,7 +112,7 @@ describe('the wrapped component', () => {
     expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
   })
 
-  it('leaves the Suspense boundary anonymous by default', () => {
+  it('leaves the Suspense boundary anonymous when devToolsName is omitted', () => {
     const name = 'Ada'
 
     const element = WrappedUserCard({ name })
