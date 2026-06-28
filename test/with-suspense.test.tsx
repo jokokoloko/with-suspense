@@ -16,7 +16,7 @@ type UserCardProps = {
 function UserCard({ name }: UserCardProps): ReactElement {
   if (name === 'Ada') throw neverResolves
 
-  return <p>Welcome, {name}</p>
+  return <p>Hello, {name}</p>
 }
 
 type UserCardSkeletonProps = {
@@ -39,7 +39,7 @@ describe('withSuspense', () => {
 
     render(<WrappedUserCard name={name} />)
 
-    expect(await screen.findByText(`Welcome, ${name}`)).toBeInTheDocument()
+    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 
   it('uses the built-in fallback when no fallback argument is given', () => {
