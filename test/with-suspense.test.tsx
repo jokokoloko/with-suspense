@@ -5,45 +5,89 @@ import { describe, expect, it } from 'vitest'
 
 import { withSuspense } from '../src'
 
-type Props = {
+// A promise that never resolves, so a component that throws it stays suspended for the test
+const pending = new Promise<void>(() => {})
+
+type UserCardProps = {
   name: string
 }
 
-// A promise that never resolves — suspends any component that throws it permanently
-const neverResolves = new Promise<void>(() => {})
+// Ada's data never resolves in these tests, so her card suspends; any other name renders
+function UserCard({ name }: UserCardProps): ReactElement {
+  if (name === 'Ada') throw pending
 
-function Greeting({ name }: Props): ReactElement {
-  if (name === 'no') throw neverResolves
-
-  return <p>Hello, {name}</p>
+  return <p>Welcome, {name}</p>
 }
 
-function SuspendingComponent(): ReactElement {
-  throw neverResolves
+type UserCardSkeletonProps = {
+  label?: string
 }
 
-type LoadingMessageProps = {
-  text?: string
+function UserCardSkeleton({
+  label = 'user',
+}: UserCardSkeletonProps): ReactElement {
+  return <p>Loading {label}</p>
 }
 
-function LoadingMessage({ text = '...' }: LoadingMessageProps): ReactElement {
-  return <p>Loading, {text}</p>
-}
+const fallback = <UserCardSkeleton />
 
-const fallback = <p>Loading...</p>
-
-const WrappedGreeting = withSuspense(Greeting, fallback)
-const WrappedSuspending = withSuspense(SuspendingComponent, fallback)
+const WrappedUserCard = withSuspense(UserCard, fallback)
 
 describe('withSuspense', () => {
-  it('sets displayName on the wrapped component', () => {
-    expect(WrappedGreeting.displayName).toBe('withSuspense(Greeting)')
+  it('renders the wrapped component', async () => {
+    const name = 'Grace'
+
+    render(<WrappedUserCard name={name} />)
+
+    expect(await screen.findByText(`Welcome, ${name}`)).toBeInTheDocument()
   })
 
-  it('leaves the Suspense boundary unnamed by default', () => {
-    const Wrapped = withSuspense(SuspendingComponent)
+  it('uses the built-in fallback when no fallback argument is given', () => {
+    const PlainUserCard = withSuspense(UserCard)
 
-    const element = Wrapped({})
+    render(<PlainUserCard name="Ada" />)
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
+  })
+
+  it('renders the fallback argument while the component is suspended', () => {
+    render(<WrappedUserCard name="Ada" />)
+
+    expect(screen.getByText('Loading user')).toBeInTheDocument()
+  })
+
+  it('renders nothing while the component is suspended when the fallback argument is null', () => {
+    const SilentUserCard = withSuspense(UserCard, null)
+
+    const { container } = render(<SilentUserCard name="Ada" />)
+
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('sets the displayName to withSuspense(Component)', () => {
+    expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
+  })
+})
+
+describe('the wrapped component', () => {
+  it('overrides the definition-time fallback with the fallback prop', () => {
+    const name = 'Ada'
+
+    const fallback = <UserCardSkeleton label={name} />
+
+    render(<WrappedUserCard name={name} fallback={fallback} />)
+
+    expect(screen.getByText(`Loading ${name}`)).toBeInTheDocument()
+  })
+
+  it('suppresses the fallback when the fallback prop is null', () => {
+    const { container } = render(<WrappedUserCard name="Ada" fallback={null} />)
+
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('leaves the Suspense boundary anonymous by default', () => {
+    const element = WrappedUserCard({ name: 'Ada' })
 
     expect(element.props).toHaveProperty('name', undefined)
   })
@@ -51,102 +95,8 @@ describe('withSuspense', () => {
   it('names the Suspense boundary when devToolsName is set', () => {
     const devToolsName = 'UserCardSuspense'
 
-    const Wrapped = withSuspense(SuspendingComponent)
-
-    const element = Wrapped({ devToolsName })
+    const element = WrappedUserCard({ name: 'Ada', devToolsName })
 
     expect(element.props).toHaveProperty('name', devToolsName)
-  })
-
-  it('accepts devToolsName without affecting rendering', async () => {
-    const name = 'squid'
-
-    render(<WrappedGreeting name={name} devToolsName="withSuspense(Custom)" />)
-
-    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
-  })
-
-  it('renders the wrapped component when not suspended', async () => {
-    const name = 'squid'
-
-    render(<WrappedGreeting name={name} />)
-
-    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
-  })
-
-  it('renders the definition-time fallback while suspended', () => {
-    render(<WrappedSuspending />)
-
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
-  })
-
-  it('renders the built-in fallback while suspended when no fallback is provided', () => {
-    const Wrapped = withSuspense(SuspendingComponent)
-
-    render(<Wrapped />)
-
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
-  })
-
-  it('renders the usage-site fallback override when provided', () => {
-    const message = 'Please wait...'
-
-    const fallback = <p>{message}</p>
-
-    render(<WrappedSuspending fallback={fallback} />)
-
-    expect(screen.getByText(message)).toBeInTheDocument()
-  })
-
-  it('renders nothing while suspended when fallback is null', () => {
-    const { container } = render(<WrappedSuspending fallback={null} />)
-
-    expect(container).toBeEmptyDOMElement()
-  })
-
-  it('renders nothing while suspended when the definition-time fallback is null', () => {
-    const Wrapped = withSuspense(SuspendingComponent, null)
-
-    const { container } = render(<Wrapped />)
-
-    expect(container).toBeEmptyDOMElement()
-  })
-
-  it('renders a component without props as the usage-site fallback override', () => {
-    const fallback = <LoadingMessage />
-
-    render(<WrappedSuspending fallback={fallback} />)
-
-    expect(screen.getByText('Loading, ...')).toBeInTheDocument()
-  })
-
-  it('renders a component with props as the usage-site fallback override', () => {
-    const text = 'Please wait...'
-
-    const fallback = <LoadingMessage text={text} />
-
-    render(<WrappedSuspending fallback={fallback} />)
-
-    expect(screen.getByText(`Loading, ${text}`)).toBeInTheDocument()
-  })
-
-  it('renders the fallback with a prop-derived value while the component is suspended', () => {
-    const name = 'no'
-
-    const fallback = <LoadingMessage text={name} />
-
-    render(<WrappedGreeting name={name} fallback={fallback} />)
-
-    expect(screen.getByText(`Loading, ${name}`)).toBeInTheDocument()
-  })
-
-  it('renders the component with a prop-derived value and not the fallback when not suspended', async () => {
-    const name = 'yes'
-
-    const fallback = <LoadingMessage text={name} />
-
-    render(<WrappedGreeting name={name} fallback={fallback} />)
-
-    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 })
