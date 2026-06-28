@@ -40,6 +40,24 @@ describe('withSuspense', () => {
     expect(WrappedGreeting.displayName).toBe('withSuspense(Greeting)')
   })
 
+  it('leaves the Suspense boundary unnamed by default', () => {
+    const Wrapped = withSuspense(SuspendingComponent)
+
+    const element = Wrapped({})
+
+    expect(element.props).toHaveProperty('name', undefined)
+  })
+
+  it('names the Suspense boundary when devToolsName is set', () => {
+    const devToolsName = 'UserCardSuspense'
+
+    const Wrapped = withSuspense(SuspendingComponent)
+
+    const element = Wrapped({ devToolsName })
+
+    expect(element.props).toHaveProperty('name', devToolsName)
+  })
+
   it('accepts devToolsName without affecting rendering', async () => {
     const name = 'squid'
 
