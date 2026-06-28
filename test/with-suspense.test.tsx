@@ -34,32 +34,32 @@ const fallback = <UserCardSkeleton />
 const WrappedUserCard = withSuspense(UserCard, fallback)
 
 describe('withSuspense', () => {
-  it('renders the wrapped component', async () => {
-    const name = 'Grace'
-
-    render(<WrappedUserCard name={name} />)
-
-    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
-  })
-
   it('uses the built-in fallback when no fallback argument is given', () => {
+    const name = 'Ada'
+
     const PlainUserCard = withSuspense(UserCard)
 
-    render(<PlainUserCard name="Ada" />)
+    render(<PlainUserCard name={name} />)
 
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
   it('renders the fallback argument while the component is suspended', () => {
-    render(<WrappedUserCard name="Ada" />)
+    const name = 'Ada'
+
+    render(<WrappedUserCard name={name} />)
 
     expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
   it('renders nothing while the component is suspended when the fallback argument is null', () => {
-    const SilentUserCard = withSuspense(UserCard, null)
+    const name = 'Ada'
 
-    const { container } = render(<SilentUserCard name="Ada" />)
+    const fallback = null
+
+    const SilentUserCard = withSuspense(UserCard, fallback)
+
+    const { container } = render(<SilentUserCard name={name} />)
 
     expect(container).toBeEmptyDOMElement()
   })
@@ -70,6 +70,14 @@ describe('withSuspense', () => {
 })
 
 describe('the wrapped component', () => {
+  it('renders the component when not suspended', async () => {
+    const name = 'Grace'
+
+    render(<WrappedUserCard name={name} />)
+
+    expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
+  })
+
   it('overrides the definition-time fallback with the fallback prop', () => {
     const name = 'Ada'
 
@@ -81,21 +89,31 @@ describe('the wrapped component', () => {
   })
 
   it('suppresses the fallback when the fallback prop is null', () => {
-    const { container } = render(<WrappedUserCard name="Ada" fallback={null} />)
+    const name = 'Ada'
+
+    const fallback = null
+
+    const { container } = render(
+      <WrappedUserCard name={name} fallback={fallback} />,
+    )
 
     expect(container).toBeEmptyDOMElement()
   })
 
   it('leaves the Suspense boundary anonymous by default', () => {
-    const element = WrappedUserCard({ name: 'Ada' })
+    const name = 'Ada'
+
+    const element = WrappedUserCard({ name })
 
     expect(element.props).toHaveProperty('name', undefined)
   })
 
   it('names the Suspense boundary when devToolsName is set', () => {
+    const name = 'Ada'
+
     const devToolsName = 'UserCardSuspense'
 
-    const element = WrappedUserCard({ name: 'Ada', devToolsName })
+    const element = WrappedUserCard({ name, devToolsName })
 
     expect(element.props).toHaveProperty('name', devToolsName)
   })
