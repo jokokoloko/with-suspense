@@ -29,23 +29,23 @@ function UserCardSkeleton({
   return <p>Loading {label}...</p>
 }
 
-const fallback = <UserCardSkeleton />
-
-const WrappedUserCard = withSuspense(UserCard, fallback)
-
 describe('withSuspense', () => {
   it('uses the built-in fallback when no fallback argument is given', () => {
     const name = 'Ada'
 
-    const PlainUserCard = withSuspense(UserCard)
+    const WrappedUserCard = withSuspense(UserCard)
 
-    render(<PlainUserCard name={name} />)
+    render(<WrappedUserCard name={name} />)
 
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
   it('renders the fallback argument while the component is suspended', () => {
     const name = 'Ada'
+
+    const fallback = <UserCardSkeleton />
+
+    const WrappedUserCard = withSuspense(UserCard, fallback)
 
     render(<WrappedUserCard name={name} />)
 
@@ -57,19 +57,23 @@ describe('withSuspense', () => {
 
     const fallback = null
 
-    const SilentUserCard = withSuspense(UserCard, fallback)
+    const WrappedUserCard = withSuspense(UserCard, fallback)
 
-    const { container } = render(<SilentUserCard name={name} />)
+    const { container } = render(<WrappedUserCard name={name} />)
 
     expect(container).toBeEmptyDOMElement()
-  })
-
-  it('sets the displayName to withSuspense(Component)', () => {
-    expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
   })
 })
 
 describe('the wrapped component', () => {
+  const fallback = <UserCardSkeleton />
+
+  const WrappedUserCard = withSuspense(UserCard, fallback)
+
+  it('sets the displayName to withSuspense(Component)', () => {
+    expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
+  })
+
   it('renders the component when not suspended', async () => {
     const name = 'Grace'
 
