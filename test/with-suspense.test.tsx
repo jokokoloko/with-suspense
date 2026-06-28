@@ -70,16 +70,20 @@ describe('the wrapped component', () => {
 
   const WrappedUserCard = withSuspense(UserCard, fallback)
 
-  it('sets the displayName to withSuspense(Component)', () => {
-    expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
-  })
-
   it('renders the component when not suspended', async () => {
     const name = 'Grace'
 
     render(<WrappedUserCard name={name} />)
 
     expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
+  })
+
+  it('uses the definition-time fallback when the fallback prop is omitted', () => {
+    const name = 'Ada'
+
+    render(<WrappedUserCard name={name} />)
+
+    expect(screen.getByText('Loading user...')).toBeInTheDocument()
   })
 
   it('overrides the definition-time fallback with the fallback prop', () => {
@@ -102,6 +106,10 @@ describe('the wrapped component', () => {
     )
 
     expect(container).toBeEmptyDOMElement()
+  })
+
+  it('sets the displayName to withSuspense(Component)', () => {
+    expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
   })
 
   it('leaves the Suspense boundary anonymous by default', () => {
