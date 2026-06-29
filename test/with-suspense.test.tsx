@@ -30,7 +30,7 @@ function UserCardSkeleton({
 }
 
 describe('withSuspense', () => {
-  it('renders its own fallback when none is given', () => {
+  it('renders its own built-in default fallback when none is given', () => {
     const name = 'Ada'
 
     const WrappedUserCard = withSuspense(UserCard)
