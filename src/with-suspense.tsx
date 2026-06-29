@@ -7,7 +7,7 @@ import {
 
 type Props<T> = T & {
   fallback?: ReactNode
-  devToolsName?: string
+  suspenseBoundaryName?: string
 }
 
 type WrappedComponent<T> = (props: Props<T>) => ReactElement
@@ -20,14 +20,14 @@ function withSuspense<T extends object>(
 
   function WithSuspense({
     fallback: fallbackOverride,
-    devToolsName,
+    suspenseBoundaryName,
     ...props
   }: Props<T>): ReactElement {
     const resolvedFallback =
       fallbackOverride === undefined ? fallback : fallbackOverride
 
     return (
-      <Suspense fallback={resolvedFallback} name={devToolsName}>
+      <Suspense fallback={resolvedFallback} name={suspenseBoundaryName}>
         <Component {...(props as T)} />
       </Suspense>
     )
