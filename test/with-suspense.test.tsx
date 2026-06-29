@@ -122,7 +122,7 @@ describe('the wrapped component', () => {
     expect(WrappedUserCard.displayName).toBe('withSuspense(UserCard)')
   })
 
-  it('leaves the Suspense boundary anonymous when devToolsName is omitted', () => {
+  it('leaves the Suspense boundary anonymous when suspenseBoundaryName is omitted', () => {
     const name = 'Ada'
 
     const element = WrappedUserCard({ name })
@@ -130,13 +130,13 @@ describe('the wrapped component', () => {
     expect(element.props).toHaveProperty('name', undefined)
   })
 
-  it('names the Suspense boundary when devToolsName is set', () => {
+  it('names the Suspense boundary when suspenseBoundaryName is set', () => {
     const name = 'Ada'
 
-    const devToolsName = 'UserCardSuspense'
+    const suspenseBoundaryName = 'UserCardSuspense'
 
-    const element = WrappedUserCard({ name, devToolsName })
+    const element = WrappedUserCard({ name, suspenseBoundaryName })
 
-    expect(element.props).toHaveProperty('name', devToolsName)
+    expect(element.props).toHaveProperty('name', suspenseBoundaryName)
   })
 })
