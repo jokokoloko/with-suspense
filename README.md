@@ -116,7 +116,7 @@ The unwrapped export is an ordinary component with no `<Suspense>` boundary of i
 
 Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
-For all its boilerplate, the raw `<Suspense>` pattern has one benefit: it makes visible which components stream — each boundary can be seen right at the usage site. That same visibility can be kept while using `withSuspense` by giving the wrapped component a descriptive name that signals streaming.
+By contrast, the usual `<Suspense>` boilerplate shows which components stream — each boundary sits right at the usage site. `withSuspense` moves that boundary into the component file, but the same visibility can be kept by giving the wrapped component a descriptive name that signals streaming.
 
 When the wrapped component is a default export, a consumer who wants the usage site to signal streaming can import it under a descriptive name, with no change to the component file:
 
@@ -153,7 +153,7 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 ### The wrapped component
 
-`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `devToolsName` props for per-usage overrides. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
+`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `devToolsName` props, set per usage site. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
 
 #### `fallback` prop (optional)
 
