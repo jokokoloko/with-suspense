@@ -43,13 +43,13 @@ describe('withSuspense', () => {
   it('renders the definition-time fallback when one is given', () => {
     const name = 'Ada'
 
-    const fallback = <UserCardSkeleton />
+    const fallback = <p>Loading card...</p>
 
     const WrappedUserCard = withSuspense(UserCard, fallback)
 
     render(<WrappedUserCard name={name} />)
 
-    expect(screen.getByText('Loading user...')).toBeInTheDocument()
+    expect(screen.getByText('Loading card...')).toBeInTheDocument()
   })
 
   it('renders nothing by suppressing the fallback when null is given', () => {
@@ -66,7 +66,7 @@ describe('withSuspense', () => {
 })
 
 describe('the wrapped component', () => {
-  const fallback = <UserCardSkeleton />
+  const fallback = <p>Loading card...</p>
 
   const WrappedUserCard = withSuspense(UserCard, fallback)
 
@@ -83,7 +83,7 @@ describe('the wrapped component', () => {
 
     render(<WrappedUserCard name={name} />)
 
-    expect(screen.getByText('Loading user...')).toBeInTheDocument()
+    expect(screen.getByText('Loading card...')).toBeInTheDocument()
   })
 
   it('renders the override fallback without a usage-site value', () => {
