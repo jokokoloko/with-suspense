@@ -153,7 +153,7 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 ### The wrapped component
 
-`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `suspenseBoundaryName` props, set per usage site. In React DevTools and stack traces, it appears as `withSuspense(Component)`.
+`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `suspenseBoundaryName` props, set per usage site. In React DevTools and stack traces, it appears as `WithSuspense(Component)`.
 
 #### `fallback` prop (optional)
 
@@ -167,7 +167,7 @@ Passing `null` suppresses the fallback rather than reverting to the default — 
 
 #### `suspenseBoundaryName` prop (optional)
 
-By default, the `<Suspense>` boundary is anonymous, identified in React DevTools by its owner — the `withSuspense(Component)` wrapper that renders it. Setting `suspenseBoundaryName` gives the boundary its own label — one per usage site.
+By default, the `<Suspense>` boundary is anonymous, identified in React DevTools by its owner — the `WithSuspense(Component)` wrapper that renders it. Setting `suspenseBoundaryName` gives the boundary its own label — one per usage site.
 
 ## Requirements
 
