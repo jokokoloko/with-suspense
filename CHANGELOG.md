@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-01
+
+### Added
+
+- `WithSuspenseComponent<T>` type export — the `WrappedComponent<T>` return type of `withSuspense`, exposed so consumers can type the wrapped component
+
+### Changed
+
+- **Breaking:** renamed the `devToolsName` prop to `suspenseBoundaryName` — the prop names the `<Suspense>` boundary (the subject it sets), not React DevTools (the destination the value surfaces in); the old name was ambiguous because the HOC exposes two DevTools names, the wrapper `displayName` and the boundary `name`
+- `displayName` label capitalized to `WithSuspense(Component)` to match the inner `WithSuspense` component name (reverses the 0.2.0 lowercasing)
+- The `<Suspense>` boundary is now unnamed by default — it no longer inherits the wrapper's `WithSuspense(Component)` label as its DevTools `name`, so it behaves like a hand-written `<Suspense>`; set `suspenseBoundaryName` to name it per usage
+- Expanded the README and npm keywords (`streaming`, `fallback`, `nextjs`, `app-router`, `react-server-components`, `rsc`) for discoverability
+
 ## [0.2.0] - 2026-05-27
 
 ### Added
