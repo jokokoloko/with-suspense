@@ -16,7 +16,7 @@ function withSuspense<T extends object>(
   Component: ComponentType<T>,
   fallback: ReactNode = 'Loading...',
 ): WrappedComponent<T> {
-  const displayName = `withSuspense(${Component.displayName ?? Component.name})`
+  const displayName = `WithSuspense(${Component.displayName ?? Component.name})`
 
   function WithSuspense({
     fallback: fallbackOverride,
