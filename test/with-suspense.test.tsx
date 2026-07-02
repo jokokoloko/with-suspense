@@ -30,26 +30,16 @@ function UserCardSkeleton({
 }
 
 describe('withSuspense', () => {
-  it('renders its own built-in default fallback when none is given', () => {
-    const name = 'Ada'
-
-    const WrappedUserCard = withSuspense(UserCard)
-
-    render(<WrappedUserCard name={name} />)
-
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
-  })
-
   it('renders the definition-time fallback when one is given', () => {
     const name = 'Ada'
 
-    const fallback = <p>Loading card...</p>
+    const fallback = <p>Loading...</p>
 
     const WrappedUserCard = withSuspense(UserCard, fallback)
 
     render(<WrappedUserCard name={name} />)
 
-    expect(screen.getByText('Loading card...')).toBeInTheDocument()
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
   it('renders nothing by suppressing the fallback when null is given', () => {

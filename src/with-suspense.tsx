@@ -14,7 +14,7 @@ type WrappedComponent<T> = (props: Props<T>) => ReactElement
 
 function withSuspense<T extends object>(
   Component: ComponentType<T>,
-  fallback: ReactNode = 'Loading...',
+  fallback: Exclude<ReactNode, undefined>,
 ): WrappedComponent<T> {
   const displayName = `WithSuspense(${Component.displayName ?? Component.name})`
 
