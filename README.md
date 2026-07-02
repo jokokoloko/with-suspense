@@ -2,7 +2,7 @@
 
 A higher-order component that wraps a React component in a `<Suspense>` boundary.
 
-`withSuspense` bundles all three concerns of a streaming component — the component itself, its `<Suspense>` boundary, and its default fallback — into the component's own file, so consumers stay free of the usual `<Suspense>` boilerplate.
+`withSuspense` bundles all three concerns of a streaming component — the component itself, its `<Suspense>` boundary, and its default fallback — into the component's own file, so its usage sites stay free of the usual boilerplate.
 
 ## Installation
 
@@ -47,6 +47,8 @@ The second argument to `withSuspense` determines what renders while the componen
 | Omitted (or `undefined`) | Renders `'Loading...'` — the built-in default |
 | Any `ReactNode`          | Renders that value                            |
 | `null`                   | Renders nothing                               |
+
+<p></p>
 
 Passing `null` renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use it for components that are visually secondary or where a flash of placeholder content would be jarring.
 
@@ -94,7 +96,7 @@ Passing `null` suppresses the fallback entirely, rendering nothing while the com
 
 The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site — only omitting the prop falls through to the definition-time fallback.
 
-**Avoid wrapping a `withSuspense`-wrapped component in your own `<Suspense>`.** It already carries its own boundary, so an additional outer boundary never fires — React resolves the suspension at the inner boundary first, causing the outer boundary's fallback to silently fail and never appear, with no error or warning. To change the fallback at a usage site, use the `fallback` prop shown above; for full manual `<Suspense>` control, reach for the unwrapped [escape hatch](#escape-hatch) export.
+**Avoid wrapping a `withSuspense`-wrapped component in your own `<Suspense>`.** It already carries its own boundary, so an additional outer boundary never fires — React resolves the suspension at the inner boundary first, causing the outer boundary's fallback to silently fail and never appear, with no error or warning. To change the fallback at a usage site, use the `fallback` prop shown above; for full manual `<Suspense>` control, reach for the unwrapped escape-hatch export described below.
 
 ## Escape hatch
 
@@ -149,6 +151,8 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | `Component` | `ComponentType<T>` | — | The component to wrap |
 | `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
 
+<p></p>
+
 `withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default. The generic `T` is inferred from `Component`, so the wrapped component is typed with the same props automatically.
 
 ### The wrapped component
@@ -162,6 +166,8 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | Omitted (or `undefined`) | Uses the fallback passed to `withSuspense` at definition time |
 | `ReactNode` | Overrides the definition-time fallback at this usage site |
 | `null` | Suppresses the fallback — renders nothing while suspended |
+
+<p></p>
 
 Passing `null` suppresses the fallback rather than reverting to the default — the same behavior it has as the second argument to `withSuspense`.
 
