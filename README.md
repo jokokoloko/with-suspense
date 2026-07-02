@@ -40,19 +40,18 @@ The wrapped component renders its own `<Suspense>` boundary automatically — no
 
 ## Fallback
 
-The second argument to `withSuspense` determines what renders while the component suspends:
+The second argument to `withSuspense` is required and determines what renders while the component suspends:
 
-| Second argument          | Fallback behavior                             |
-| ------------------------ | --------------------------------------------- |
-| Omitted (or `undefined`) | Renders `'Loading...'` — the built-in default |
-| Any `ReactNode`          | Renders that value                            |
-| `null`                   | Renders nothing                               |
+| Second argument | Fallback behavior  |
+| --------------- | ------------------ |
+| Any `ReactNode` | Renders that value |
+| `null`          | Renders nothing    |
 
 <p></p>
 
 Passing `null` renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use it for components that are visually secondary or where a flash of placeholder content would be jarring.
 
-Providing an explicit value rather than relying on the built-in `'Loading...'` default keeps the loading state intentional.
+The argument's type excludes `undefined`, so omitting it or passing `undefined` is a compile error. A blank pending state can only come from an explicit `null` — a deliberate choice, never a forgotten fallback.
 
 ### The `fallback` const
 
@@ -144,16 +143,16 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 ## API
 
-### `withSuspense(Component, fallback?)`
+### `withSuspense(Component, fallback)`
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `Component` | `ComponentType<T>` | — | The component to wrap |
-| `fallback` | `ReactNode` | `'Loading...'` | Rendered while the component suspends |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `Component` | `ComponentType<T>` | The component to wrap |
+| `fallback` | `Exclude<ReactNode, undefined>` | Rendered while the component suspends |
 
 <p></p>
 
-`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default. The generic `T` is inferred from `Component`, so the wrapped component is typed with the same props automatically.
+`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default. Both parameters are required — pass `null` to render nothing. The generic `T` is inferred from `Component`, so the wrapped component is typed with the same props automatically.
 
 ### The wrapped component
 
