@@ -3,7 +3,11 @@ import { type ReactElement } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { withSuspense } from '../src'
+import {
+  withSuspense,
+  type WithSuspenseComponent,
+  type WithSuspenseProps,
+} from '../src'
 
 // A component that throws this stays suspended for the whole test
 const neverResolves = new Promise<void>(() => {})
@@ -58,7 +62,10 @@ describe('withSuspense', () => {
 describe('the wrapped component', () => {
   const fallback = <p>Loading card...</p>
 
-  const WrappedUserCard = withSuspense(UserCard, fallback)
+  const WrappedUserCard: WithSuspenseComponent<UserCardProps> = withSuspense(
+    UserCard,
+    fallback,
+  )
 
   it('renders the component when not suspended', async () => {
     const name = 'Grace'
@@ -91,7 +98,9 @@ describe('the wrapped component', () => {
 
     const fallback = <UserCardSkeleton label={name} />
 
-    render(<WrappedUserCard name={name} fallback={fallback} />)
+    const props: WithSuspenseProps<UserCardProps> = { name, fallback }
+
+    render(<WrappedUserCard {...props} />)
 
     expect(screen.getByText(`Loading ${name}...`)).toBeInTheDocument()
   })
