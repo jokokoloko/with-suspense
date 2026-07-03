@@ -10,7 +10,9 @@ type Props<T> = T & {
   suspenseBoundaryName?: string
 }
 
-type WrappedComponent<T> = (props: Props<T>) => ReactElement
+type WrappedComponent<T> = ((props: Props<T>) => ReactElement) & {
+  displayName: string
+}
 
 function withSuspense<T extends object>(
   Component: ComponentType<T>,

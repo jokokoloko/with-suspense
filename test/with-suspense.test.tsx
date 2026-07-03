@@ -1,9 +1,13 @@
 import { type ReactElement } from 'react'
 
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, expectTypeOf, it } from 'vitest'
 
-import { withSuspense } from '../src'
+import {
+  withSuspense,
+  type WithSuspenseComponent,
+  type WithSuspenseProps,
+} from '../src'
 
 // A component that throws this stays suspended for the whole test
 const neverResolves = new Promise<void>(() => {})
@@ -30,6 +34,14 @@ function UserCardSkeleton({
 }
 
 describe('withSuspense', () => {
+  it('rejects an omitted or undefined fallback', () => {
+    // @ts-expect-error the fallback argument is required
+    withSuspense(UserCard)
+
+    // @ts-expect-error undefined is excluded; null is the only way to render nothing
+    withSuspense(UserCard, undefined)
+  })
+
   it('renders the definition-time fallback when one is given', () => {
     const name = 'Ada'
 
@@ -56,7 +68,7 @@ describe('withSuspense', () => {
 })
 
 describe('the wrapped component', () => {
-  const fallback = <p>Loading card...</p>
+  const fallback = <p>Loading...</p>
 
   const WrappedUserCard = withSuspense(UserCard, fallback)
 
@@ -73,7 +85,7 @@ describe('the wrapped component', () => {
 
     render(<WrappedUserCard name={name} />)
 
-    expect(screen.getByText('Loading card...')).toBeInTheDocument()
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
   it('renders the override fallback without a usage-site value', () => {
@@ -108,10 +120,6 @@ describe('the wrapped component', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('sets the displayName to WithSuspense(Component)', () => {
-    expect(WrappedUserCard.displayName).toBe('WithSuspense(UserCard)')
-  })
-
   it('leaves the Suspense boundary anonymous when suspenseBoundaryName is omitted', () => {
     const name = 'Ada'
 
@@ -128,5 +136,27 @@ describe('the wrapped component', () => {
     const element = WrappedUserCard({ name, suspenseBoundaryName })
 
     expect(element.props).toHaveProperty('name', suspenseBoundaryName)
+  })
+
+  it('sets the displayName to WithSuspense(Component)', () => {
+    expect(WrappedUserCard.displayName).toBe('WithSuspense(UserCard)')
+  })
+})
+
+describe('the exported types', () => {
+  const fallback = <p>Loading...</p>
+
+  const WrappedUserCard = withSuspense(UserCard, fallback)
+
+  it('matches the wrapped component with WithSuspenseComponent', () => {
+    expectTypeOf(WrappedUserCard).toEqualTypeOf<
+      WithSuspenseComponent<UserCardProps>
+    >()
+  })
+
+  it('matches the wrapped component props with WithSuspenseProps', () => {
+    expectTypeOf<WithSuspenseProps<UserCardProps>>().toEqualTypeOf<
+      Parameters<WithSuspenseComponent<UserCardProps>>[0]
+    >()
   })
 })
