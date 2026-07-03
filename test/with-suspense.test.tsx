@@ -1,7 +1,7 @@
 import { type ReactElement } from 'react'
 
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, expectTypeOf, it } from 'vitest'
 
 import {
   withSuspense,
@@ -62,10 +62,7 @@ describe('withSuspense', () => {
 describe('the wrapped component', () => {
   const fallback = <p>Loading card...</p>
 
-  const WrappedUserCard: WithSuspenseComponent<UserCardProps> = withSuspense(
-    UserCard,
-    fallback,
-  )
+  const WrappedUserCard = withSuspense(UserCard, fallback)
 
   it('renders the component when not suspended', async () => {
     const name = 'Grace'
@@ -98,9 +95,7 @@ describe('the wrapped component', () => {
 
     const fallback = <UserCardSkeleton label={name} />
 
-    const props: WithSuspenseProps<UserCardProps> = { name, fallback }
-
-    render(<WrappedUserCard {...props} />)
+    render(<WrappedUserCard name={name} fallback={fallback} />)
 
     expect(screen.getByText(`Loading ${name}...`)).toBeInTheDocument()
   })
@@ -137,5 +132,31 @@ describe('the wrapped component', () => {
     const element = WrappedUserCard({ name, suspenseBoundaryName })
 
     expect(element.props).toHaveProperty('name', suspenseBoundaryName)
+  })
+})
+
+describe('the exported types', () => {
+  it('matches the wrapped component with WithSuspenseComponent', () => {
+    const fallback = <p>Loading card...</p>
+
+    const WrappedUserCard = withSuspense(UserCard, fallback)
+
+    expectTypeOf(WrappedUserCard).toEqualTypeOf<
+      WithSuspenseComponent<UserCardProps>
+    >()
+  })
+
+  it('matches the wrapped component props with WithSuspenseProps', () => {
+    expectTypeOf<WithSuspenseProps<UserCardProps>>().toEqualTypeOf<
+      Parameters<WithSuspenseComponent<UserCardProps>>[0]
+    >()
+  })
+
+  it('rejects an omitted or undefined fallback', () => {
+    // @ts-expect-error the fallback argument is required
+    withSuspense(UserCard)
+
+    // @ts-expect-error undefined is excluded; null is the only way to render nothing
+    withSuspense(UserCard, undefined)
   })
 })
