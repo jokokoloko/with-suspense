@@ -120,10 +120,6 @@ describe('the wrapped component', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('sets the displayName to WithSuspense(Component)', () => {
-    expect(WrappedUserCard.displayName).toBe('WithSuspense(UserCard)')
-  })
-
   it('leaves the Suspense boundary anonymous when suspenseBoundaryName is omitted', () => {
     const name = 'Ada'
 
@@ -140,6 +136,10 @@ describe('the wrapped component', () => {
     const element = WrappedUserCard({ name, suspenseBoundaryName })
 
     expect(element.props).toHaveProperty('name', suspenseBoundaryName)
+  })
+
+  it('sets the displayName to WithSuspense(Component)', () => {
+    expect(WrappedUserCard.displayName).toBe('WithSuspense(UserCard)')
   })
 })
 
