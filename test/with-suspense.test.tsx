@@ -34,6 +34,14 @@ function UserCardSkeleton({
 }
 
 describe('withSuspense', () => {
+  it('rejects an omitted or undefined fallback', () => {
+    // @ts-expect-error the fallback argument is required
+    withSuspense(UserCard)
+
+    // @ts-expect-error undefined is excluded; null is the only way to render nothing
+    withSuspense(UserCard, undefined)
+  })
+
   it('renders the definition-time fallback when one is given', () => {
     const name = 'Ada'
 
@@ -150,13 +158,5 @@ describe('the exported types', () => {
     expectTypeOf<WithSuspenseProps<UserCardProps>>().toEqualTypeOf<
       Parameters<WithSuspenseComponent<UserCardProps>>[0]
     >()
-  })
-
-  it('rejects an omitted or undefined fallback', () => {
-    // @ts-expect-error the fallback argument is required
-    withSuspense(UserCard)
-
-    // @ts-expect-error undefined is excluded; null is the only way to render nothing
-    withSuspense(UserCard, undefined)
   })
 })
