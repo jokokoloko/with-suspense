@@ -60,7 +60,7 @@ describe('withSuspense', () => {
 })
 
 describe('the wrapped component', () => {
-  const fallback = <p>Loading card...</p>
+  const fallback = <p>Loading...</p>
 
   const WrappedUserCard = withSuspense(UserCard, fallback)
 
@@ -77,7 +77,7 @@ describe('the wrapped component', () => {
 
     render(<WrappedUserCard name={name} />)
 
-    expect(screen.getByText('Loading card...')).toBeInTheDocument()
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
   it('renders the override fallback without a usage-site value', () => {
@@ -136,11 +136,11 @@ describe('the wrapped component', () => {
 })
 
 describe('the exported types', () => {
+  const fallback = <p>Loading...</p>
+
+  const WrappedUserCard = withSuspense(UserCard, fallback)
+
   it('matches the wrapped component with WithSuspenseComponent', () => {
-    const fallback = <p>Loading card...</p>
-
-    const WrappedUserCard = withSuspense(UserCard, fallback)
-
     expectTypeOf(WrappedUserCard).toEqualTypeOf<
       WithSuspenseComponent<UserCardProps>
     >()
