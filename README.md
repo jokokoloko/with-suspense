@@ -51,7 +51,7 @@ The second argument to `withSuspense` is required and determines what renders wh
 
 Passing `null` renders nothing while the component suspends. React's own documentation uses `<Suspense fallback={null}>` as the canonical way to suppress a loading indicator. Use it for components that are visually secondary or where a flash of placeholder content would be jarring.
 
-The argument's type excludes `undefined`, so omitting it or passing `undefined` is a compile error. A blank pending state can only come from an explicit `null`: a deliberate choice, never a forgotten fallback.
+The argument's type excludes `undefined`, so omitting it or passing `undefined` is a compile error. A blank pending state can only come from an explicit `null` — a deliberate choice, never a forgotten fallback.
 
 ### The `fallback` const
 
@@ -102,10 +102,10 @@ The prop uses a strict `=== undefined` check internally, so `null` suppresses co
 A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
-// default export: wrapped, for common use
+// default export — wrapped, for common use
 export default withSuspense(UserCard, fallback)
 
-// named export: unwrapped, for full manual control
+// named export — unwrapped, for full manual control
 export { UserCard }
 ```
 
@@ -115,7 +115,7 @@ The unwrapped export is an ordinary component with no `<Suspense>` boundary of i
 
 ## Naming to signal streaming
 
-Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />`: clean, but indistinguishable from a component that does not stream.
+Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />` — clean, but indistinguishable from a component that does not stream.
 
 By contrast, the usual `<Suspense>` boilerplate shows which components stream: each boundary sits right at the usage site. `withSuspense` moves that boundary into the component file, but the same visibility can be kept by giving the wrapped component a descriptive name that signals streaming.
 
