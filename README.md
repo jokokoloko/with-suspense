@@ -102,10 +102,10 @@ The prop uses a strict `=== undefined` check internally, so `null` suppresses co
 A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
-// default export — wrapped, for common use
+// wrapped, for common use
 export default withSuspense(UserCard, fallback)
 
-// named export — unwrapped, for full manual control
+// unwrapped, for full manual control
 export { UserCard }
 ```
 
