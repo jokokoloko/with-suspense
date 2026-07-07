@@ -2,7 +2,7 @@
 
 A higher-order component that wraps a React component in a `<Suspense>` boundary.
 
-`withSuspense` frees usage sites from the usual streaming boilerplate by bundling the `<Suspense>` boundary and default fallback into the component's own file.
+`withSuspense` frees usage sites from the usual streaming boilerplate by bundling the `<Suspense>` boundary and the default fallback into the component's own file.
 
 ## Installation
 
