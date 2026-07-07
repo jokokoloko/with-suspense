@@ -102,14 +102,14 @@ The prop uses a strict `=== undefined` check internally, so `null` suppresses co
 A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
-// wrapped, for common use
+// wrapped: renders its own <Suspense> boundary automatically
 export default withSuspense(UserCard, fallback)
 
-// unwrapped, for full manual control
+// unwrapped: no <Suspense> boundary of its own (full manual control)
 export { UserCard }
 ```
 
-This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default handles common usage, while the unwrapped export stays available without reaching into the component's internals.
+This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default renders its own `<Suspense>` boundary automatically, while the unwrapped export stays available without reaching into the component's internals.
 
 The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own. Use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test.
 
