@@ -176,6 +176,12 @@ Passing `null` suppresses the fallback rather than reverting to the default (the
 
 By default, the `<Suspense>` boundary is anonymous. React DevTools identifies it by its owner, the `WithSuspense(Component)` wrapper that renders it. Setting `suspenseBoundaryName` gives the boundary its own label, one per usage site.
 
+#### `ref` prop (React 19)
+
+React 19 treats `ref` as an ordinary prop, so a `ref` passed to the wrapped component forwards to `Component` like any other prop. Declare `ref` in the component's own props to keep it typed end-to-end. The ref stays `null` until the component resolves.
+
+React 16.6 through 18 do not pass `ref` through a plain function component, so ref forwarding needs React 19.
+
 ## Requirements
 
 React 16.6 or later (`Suspense` was introduced in React 16.6).
