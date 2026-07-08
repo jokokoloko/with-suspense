@@ -180,7 +180,7 @@ By default, the `<Suspense>` boundary is anonymous. React DevTools identifies it
 
 React 16.6 or later (`Suspense` was introduced in React 16.6).
 
-`withSuspense` is plain React: it works anywhere a component can suspend.
+`withSuspense` is plain React. It works anywhere a component can suspend.
 
 ## License
 
