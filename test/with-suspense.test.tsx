@@ -81,6 +81,28 @@ describe('the wrapped component', () => {
     expect(await screen.findByText(`Hello, ${name}`)).toBeInTheDocument()
   })
 
+  it('passes the ref through to the component when not suspended', async () => {
+    const name = 'Grace'
+
+    const ref = createRef<HTMLParagraphElement>()
+
+    render(<WrappedUserCard name={name} ref={ref} />)
+
+    const paragraph = await screen.findByText(`Hello, ${name}`)
+
+    expect(ref.current).toBe(paragraph)
+  })
+
+  it('keeps the ref null while the component is suspended', () => {
+    const name = 'Ada'
+
+    const ref = createRef<HTMLParagraphElement>()
+
+    render(<WrappedUserCard name={name} ref={ref} />)
+
+    expect(ref.current).toBeNull()
+  })
+
   it('renders the definition-time fallback when the fallback prop is omitted', () => {
     const name = 'Ada'
 
@@ -119,28 +141,6 @@ describe('the wrapped component', () => {
     )
 
     expect(container).toBeEmptyDOMElement()
-  })
-
-  it('passes the ref through to the component when not suspended', async () => {
-    const name = 'Grace'
-
-    const ref = createRef<HTMLParagraphElement>()
-
-    render(<WrappedUserCard name={name} ref={ref} />)
-
-    const paragraph = await screen.findByText(`Hello, ${name}`)
-
-    expect(ref.current).toBe(paragraph)
-  })
-
-  it('keeps the ref null while the component is suspended', () => {
-    const name = 'Ada'
-
-    const ref = createRef<HTMLParagraphElement>()
-
-    render(<WrappedUserCard name={name} ref={ref} />)
-
-    expect(ref.current).toBeNull()
   })
 
   it('leaves the Suspense boundary anonymous when suspenseBoundaryName is omitted', () => {
