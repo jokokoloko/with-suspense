@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** the `fallback` argument to `withSuspense` is now required, typed `Exclude<ReactNode, undefined>` — the built-in `'Loading...'` default is removed. Omitting the argument or passing `undefined` is a compile error, and `null` stays the single deliberate way to render nothing. Migration: pass a fallback (`null` for nothing); every omitting call site fails loudly with `Expected 2 arguments, but got 1`, never with a silent behavior change
+- README reworked throughout: the intro leads with what the package does for usage sites, the required `fallback` is documented in the fallback table and API signature, ref forwarding on React 19 is documented (a `ref` forwards to the component like any other prop, stays `null` while the component suspends, and does not pass through on React 16.6 through 18), the escape-hatch comments define each export by its boundary state, npm rendering is fixed (broken in-page anchor removed, consistent table spacing), and a full punctuation pass makes the prose read as deliberately written
+
+### Fixed
+
+- The `WithSuspenseComponent<T>` type now declares `displayName: string`, so reading `displayName` off a wrapped component type-checks — the HOC has always set it at runtime, but the declared type erased it
+
 ## [0.3.0] - 2026-07-01
 
 ### Added
