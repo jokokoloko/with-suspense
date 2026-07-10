@@ -158,7 +158,7 @@ The generic `T` is inferred from `Component`, so the wrapped component is typed 
 
 ### The wrapped component
 
-`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `suspenseBoundaryName` props, set per usage site. In React DevTools and stack traces, it appears as `WithSuspense(Component)`.
+`withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `suspenseBoundaryName` props, set per usage site. On React 19, the original props include `ref`, which forwards to `Component` like any other prop; the ref stays `null` until the component resolves. Earlier React versions do not pass `ref` through a plain function component. In React DevTools and stack traces, it appears as `WithSuspense(Component)`.
 
 #### `fallback` prop (optional)
 
@@ -175,12 +175,6 @@ Passing `null` suppresses the fallback rather than reverting to the default (the
 #### `suspenseBoundaryName` prop (optional)
 
 By default, the `<Suspense>` boundary is anonymous. React DevTools identifies it by its owner, the `WithSuspense(Component)` wrapper that renders it. Setting `suspenseBoundaryName` gives the boundary its own label, one per usage site.
-
-#### `ref` prop (React 19)
-
-React 19 treats `ref` as an ordinary prop, so a `ref` passed to the wrapped component forwards to `Component` like any other prop. Declare `ref` in the component's own props to keep it typed end-to-end. The ref stays `null` until the component resolves.
-
-React 16.6 through 18 do not pass `ref` through a plain function component, so ref forwarding needs React 19.
 
 ## Requirements
 
