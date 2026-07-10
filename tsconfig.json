@@ -6,14 +6,15 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "strict": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "rootDir": "src",
-    "outDir": "dist",
-    "skipLibCheck": true,
-    "ignoreDeprecations": "6.0"
+    "noEmit": true,
+    "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "test",
+    "tsup.config.ts",
+    "vitest.config.ts",
+    "vitest.setup.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
