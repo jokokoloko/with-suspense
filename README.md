@@ -160,6 +160,8 @@ The generic `T` is inferred from `Component`, so the wrapped component is typed 
 
 `withSuspense` returns a new component that accepts all of `Component`'s original props plus optional `fallback` and `suspenseBoundaryName` props, set per usage site. In React DevTools and stack traces, it appears as `WithSuspense(Component)`.
 
+On React 19, the original props include `ref`, which forwards to `Component` like any other prop; the ref stays `null` while the component suspends. Earlier React versions do not pass `ref` through a plain function component.
+
 #### `fallback` prop (optional)
 
 | Value | Behavior |

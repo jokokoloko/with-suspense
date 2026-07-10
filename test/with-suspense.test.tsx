@@ -93,7 +93,7 @@ describe('the wrapped component', () => {
     expect(ref.current).toBe(paragraph)
   })
 
-  it('keeps the ref null while the component is suspended', () => {
+  it('keeps the ref null while the component suspends', () => {
     const name = 'Ada'
 
     const ref = createRef<HTMLParagraphElement>()
