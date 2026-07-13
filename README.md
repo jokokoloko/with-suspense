@@ -150,7 +150,7 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `Component` | `ComponentType<T>` | The component to wrap |
-| `fallback` | `Exclude<ReactNode, undefined>` | Rendered while the component suspends |
+| `fallback` | `Exclude<ReactNode, undefined>` | The default fallback, rendered while the component suspends |
 
 <p></p>
 
