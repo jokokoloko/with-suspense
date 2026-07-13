@@ -75,7 +75,7 @@ export default withSuspense(UserCard, fallback)
 
 The wrapped component also accepts a `fallback` prop, giving each usage site control over its own fallback.
 
-Omitting the prop uses the default fallback, passed to `withSuspense` at definition time:
+Omitting the prop uses the default fallback, which is passed to `withSuspense` at definition time:
 
 ```tsx
 <UserCard id="1" />
