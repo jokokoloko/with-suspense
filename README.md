@@ -38,9 +38,11 @@ export { UserCard }
 
 The wrapped component renders its own `<Suspense>` boundary automatically, so there is no need to add one at the usage site.
 
+Passing a fallback to `withSuspense` is required: it has none built in, so the author owns the pending state. The fallback defined in the component's own file is the default fallback, the one every usage site gets unless overridden.
+
 ## Fallback
 
-The second argument to `withSuspense` is required and determines what renders while the component suspends:
+The second argument to `withSuspense` is the default fallback. It is required and determines what renders while the component suspends:
 
 | Second argument | Fallback behavior  |
 | --------------- | ------------------ |
