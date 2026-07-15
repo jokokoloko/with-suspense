@@ -25,7 +25,7 @@
   },
   "license": "MIT",
   "author": "jokokoloko",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.13.0",
   "type": "module",
   "exports": {
     ".": {
@@ -78,11 +78,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown",
