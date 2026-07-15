@@ -154,7 +154,9 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 <p></p>
 
-`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default. Both parameters are required. Passing `null` as the `fallback` renders nothing while the component suspends.
+`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default.
+
+Both parameters are required. Passing `null` as the `fallback` renders nothing while the component suspends.
 
 The generic `T` is inferred from `Component`, so the wrapped component is typed with the same props automatically.
 
