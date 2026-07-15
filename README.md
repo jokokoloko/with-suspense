@@ -101,7 +101,7 @@ The prop uses a strict `=== undefined` check internally, so `null` suppresses co
 
 ## Escape hatch
 
-A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
+A component author who wants to give consumers full manual control at usage sites can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
 // wrapped: renders its own <Suspense> boundary automatically
