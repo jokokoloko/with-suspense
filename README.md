@@ -178,7 +178,7 @@ In React DevTools and stack traces, the wrapped component appears as `WithSuspen
 
 <p></p>
 
-Passing `null` suppresses the fallback entirely, rendering nothing rather than reverting to the default (the same behavior it has as the second argument to `withSuspense`).
+As with the second argument to `withSuspense`, passing `null` suppresses the fallback entirely, rendering nothing rather than reverting to the default.
 
 #### `suspenseBoundaryName` prop (optional)
 
