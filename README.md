@@ -172,7 +172,7 @@ In React DevTools and stack traces, the wrapped component appears as `WithSuspen
 
 | Value | Behavior |
 | --- | --- |
-| Omitted (or `undefined`) | Uses the default fallback |
+| Omitted (or `undefined`) | Uses the default fallback passed to `withSuspense` |
 | `ReactNode` | Overrides the default fallback at this usage site |
 | `null` | Suppresses the fallback entirely, rendering nothing while suspended |
 
