@@ -113,7 +113,7 @@ export { UserCard }
 
 This is a recommended convention, not something `withSuspense` enforces: the wrapped default renders its own `<Suspense>` boundary automatically, while the unwrapped export is available for full manual control.
 
-The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own. Use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. Statics stay reachable through it as well: `withSuspense` returns a new function, so properties attached to the component itself live on the unwrapped export, not the wrapped one.
+The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own. Use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. Statics stay reachable through it as well: `withSuspense` returns a new function (the wrapped component), so properties attached to the component itself are on the unwrapped export.
 
 ## Naming to signal streaming
 
