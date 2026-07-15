@@ -111,7 +111,7 @@ export default withSuspense(UserCard, fallback)
 export { UserCard }
 ```
 
-This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default renders its own `<Suspense>` boundary automatically, while the unwrapped export stays available without reaching into the component's internals.
+This is a recommended convention, not something `withSuspense` enforces: the wrapped default renders its own `<Suspense>` boundary automatically, while the unwrapped export stays available without reaching into the component's internals.
 
 The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own. Use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. Statics stay reachable through it as well: `withSuspense` returns a new function, so properties attached to the component itself live on the unwrapped export, not the wrapped one.
 
