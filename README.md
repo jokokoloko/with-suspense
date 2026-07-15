@@ -38,9 +38,11 @@ export { UserCard }
 
 The wrapped component renders its own `<Suspense>` boundary automatically, so there is no need to add one at the usage site.
 
+Passing a fallback to `withSuspense` is required: it has none built in, so the component author owns the pending state. The fallback defined in the component's own file is the default fallback, which every usage site inherits unless overridden.
+
 ## Fallback
 
-The second argument to `withSuspense` is required and determines what renders while the component suspends:
+The second argument to `withSuspense` is the default fallback. It is required and determines what renders while the component suspends:
 
 | Second argument | Fallback behavior  |
 | --------------- | ------------------ |
@@ -75,13 +77,13 @@ export default withSuspense(UserCard, fallback)
 
 The wrapped component also accepts a `fallback` prop, giving each usage site control over its own fallback.
 
-Omitting the prop uses the definition-time fallback:
+Omitting the prop uses the default fallback, which is passed to `withSuspense` at definition time:
 
 ```tsx
 <UserCard id="1" />
 ```
 
-Passing any `ReactNode` overrides the definition-time fallback for that one usage:
+Passing any `ReactNode` overrides the default fallback for that one usage:
 
 ```tsx
 <UserCard id="1" fallback={<UserCardSkeleton />} />
@@ -93,13 +95,13 @@ Passing `null` suppresses the fallback entirely, rendering nothing while the com
 <UserCard id="1" fallback={null} />
 ```
 
-The prop uses a strict `=== undefined` check internally, so `null` suppresses consistently at both the definition site and the usage site. Only omitting the prop falls through to the definition-time fallback.
+Only omitting the prop falls through to the default fallback; passing `null` suppresses the fallback at both the definition site and the usage site.
 
 **Avoid wrapping a `withSuspense`-wrapped component in your own `<Suspense>`.** It already carries its own boundary, so an additional outer boundary never fires: React resolves the suspension at the inner boundary first, causing the outer boundary's fallback to silently fail and never appear, with no error or warning. To change the fallback at a usage site, use the `fallback` prop shown above; for full manual `<Suspense>` control, reach for the unwrapped escape-hatch export described below.
 
 ## Escape hatch
 
-A component author who wants to give consumers full manual control can export both the wrapped and unwrapped versions from their component file:
+A component author who wants to give consumers full manual control at usage sites can export both the wrapped and unwrapped versions from their component file:
 
 ```tsx
 // wrapped: renders its own <Suspense> boundary automatically
@@ -109,13 +111,13 @@ export default withSuspense(UserCard, fallback)
 export { UserCard }
 ```
 
-This is a recommended convention for the component author, not something `withSuspense` enforces: the wrapped default renders its own `<Suspense>` boundary automatically, while the unwrapped export stays available without reaching into the component's internals.
+This is a recommended convention, not something `withSuspense` enforces: the wrapped default renders its own `<Suspense>` boundary automatically, while the unwrapped export is available for full manual control.
 
-The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own. Use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. Statics stay reachable through it as well: `withSuspense` returns a new function, so properties attached to the component itself live on the unwrapped export, not the wrapped one.
+The unwrapped export is an ordinary component with no `<Suspense>` boundary of its own. Use it wherever you need full manual control, such as within the usual streaming boilerplate or in a test. Statics stay reachable through it as well: `withSuspense` returns a new function (the wrapped component), so properties attached to the component itself are on the unwrapped export.
 
 ## Naming to signal streaming
 
-Throughout this documentation the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />`, which is clean but indistinguishable from a component that does not stream.
+In every example above, the wrapped component is the default export under the component's own name, so usage sites read `<UserCard />`, which is clean but indistinguishable from a component that does not stream.
 
 By contrast, the usual `<Suspense>` boilerplate shows which components stream: each boundary sits right at the usage site. `withSuspense` moves that boundary into the component file, but the same visibility can be kept by giving the wrapped component a descriptive name that signals streaming.
 
@@ -125,7 +127,7 @@ When the wrapped component is a default export, a consumer who wants the usage s
 import UserCardStreaming from './user-card'
 ```
 
-To make that name canonical so every consumer gets it without renaming, bake it into the component file. Export the plain component as the default and the wrapped version as a descriptive named export:
+To make that name canonical so every usage site reads it without renaming, bake it into the component file. Export the plain component as the default and the wrapped version as a descriptive named export:
 
 ```tsx
 async function UserCard({ id }: Props): Promise<ReactElement> { ... }
@@ -147,12 +149,14 @@ With either approach, the usage site reads `<UserCardStreaming />`, which signal
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `Component` | `ComponentType<T>` | The component to wrap |
-| `fallback` | `Exclude<ReactNode, undefined>` | Rendered while the component suspends |
+| `Component` | `ComponentType<T>` | The component to wrap in a `<Suspense>` boundary |
+| `fallback` | `Exclude<ReactNode, undefined>` | The default fallback, rendered while the component suspends |
 
 <p></p>
 
-`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default. Both parameters are required. Passing `null` as the `fallback` renders nothing while the component suspends.
+`withSuspense` wraps `Component` in a `<Suspense>` boundary, with `fallback` as its definition-time default.
+
+Both parameters are required. Passing `null` as the `fallback` renders nothing while the component suspends.
 
 The generic `T` is inferred from `Component`, so the wrapped component is typed with the same props automatically.
 
@@ -168,13 +172,13 @@ In React DevTools and stack traces, the wrapped component appears as `WithSuspen
 
 | Value | Behavior |
 | --- | --- |
-| Omitted (or `undefined`) | Uses the fallback passed to `withSuspense` at definition time |
-| `ReactNode` | Overrides the definition-time fallback at this usage site |
+| Omitted (or `undefined`) | Uses the default fallback passed to `withSuspense` |
+| `ReactNode` | Overrides the default fallback for that one usage |
 | `null` | Suppresses the fallback, rendering nothing while suspended |
 
 <p></p>
 
-Passing `null` suppresses the fallback rather than reverting to the default (the same behavior it has as the second argument to `withSuspense`).
+As with the second argument to `withSuspense`, passing `null` suppresses the fallback entirely, rendering nothing rather than reverting to the default.
 
 #### `suspenseBoundaryName` prop (optional)
 
